@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import '../App.css';
 import { saveTimeEntry } from '../services/apiService';
-import { useTimeStore } from '../hooks/useTimeStore.js';
+import { useTimeStore } from '../hooks/useTimeStore';
 
 function RecordTimeWidget() {
   const [clockedIn, setClockedIn] = useState(false);
@@ -24,7 +24,7 @@ function RecordTimeWidget() {
     }).replace(',', ''));
   }
 
-  const handleClockOut = async (event) => {
+  const handleClockOut = async () => {
     setClockedIn(false);
     const clockOutTime = (new Date()).toLocaleString('en-CA', {
       year: 'numeric',
@@ -45,10 +45,10 @@ function RecordTimeWidget() {
     await refreshTimeEntries();
   }
 
-  const handleChange = (event) => {
+  const handleChange = () => {
   }
 
-  const handleEditTime = (event) => {
+  const handleEditTime = () => {
     setInputDisabled(!inputDisabled);
   }
 

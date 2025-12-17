@@ -1,5 +1,7 @@
 export interface TimeEntry {
   id: number;
-  startTime: date;
-  endTime: date;
+  startTime: Date;
+  endTime: Date;
+  start: Date;
+  end: Date;
 }

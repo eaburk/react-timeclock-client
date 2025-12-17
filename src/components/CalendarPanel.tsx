@@ -1,9 +1,9 @@
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import type { DateValue } from "../types";
+import type { DateValue } from "../types/dataTypes";
 import '../App.css';
-import { useTimeStore } from '../hooks/useTimeStore.js';
+import { useTimeStore } from '../hooks/useTimeStore';
 
 
 function CalendarPanel() {

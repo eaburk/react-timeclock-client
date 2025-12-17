@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import type { DateValue } from "../types";
 import type { Company } from "../types/Company";
 import '../App.css';
 import { fetchCompanies } from "../services/apiService";
 
 function CompanySelection() {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [companies, setCompanies] = useState<Company[]>([]);
 
   useEffect(() => {
@@ -15,9 +13,6 @@ function CompanySelection() {
       })
       .catch(error => {
         console.log("Error fetching companies:", error);
-      })
-      .finally(() => {
-        setIsLoading(false)
       });
   }, []);
 

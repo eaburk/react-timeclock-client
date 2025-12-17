@@ -14,9 +14,9 @@ export const fetchCompanies = async (): Promise<Company[]> => {
   return data;
 };
 
-export const fetchTimeEntries = async (startDate, endDate, company): promise<timeentry[]> => {
+export const fetchTimeEntries = async (startDate: Date, endDate: Date, company: Number | null): Promise<TimeEntry[]> => {
   if(!startDate || !endDate) {
-    return;
+    return [];
   }
   const response = await fetch(`${API_BASE_URL}/time-entries?startDate=${startDate.toISOString().slice(0,10)}&endDate=${endDate.toISOString().slice(0,10)}&company=${company}`);
 
@@ -31,7 +31,7 @@ export const fetchTimeEntries = async (startDate, endDate, company): promise<tim
   }));
 };
 
-export const saveTimeEntry = async (payload: any): promise<timeentry[]> => {
+export const saveTimeEntry = async (payload: any): Promise<TimeEntry[]> => {
   const response = await fetch(`${API_BASE_URL}/time-entries`, {
     method: 'POST',
     headers: {

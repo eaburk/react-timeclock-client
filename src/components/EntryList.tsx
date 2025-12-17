@@ -1,17 +1,16 @@
-import { useState, useEffect } from "react";
-import type { TimeEntry } from "../types/TimeEntry";
+import { useEffect } from "react";
 import '../App.css';
-import { useTimeStore } from '../hooks/useTimeStore.js';
+import { useTimeStore } from '../hooks/useTimeStore';
+import type { TimeEntry } from '../types/TimeEntry';
 
 function EntryList() {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const timeEntries = useTimeStore((state) => state.entries);
   const refreshTimeEntries = useTimeStore((state) => state.refreshEntries);
   useEffect(() => {
     refreshTimeEntries()
   }, [])
 
-  const getTotalTime = (timeEntry: date) => {
+  const getTotalTime = (timeEntry: TimeEntry) => {
     let difference = Math.abs(timeEntry.end.getTime() - timeEntry.start.getTime());
     let totalMinutes = Math.floor(difference / (1000 * 60));
 
@@ -21,7 +20,7 @@ function EntryList() {
     return `${hours}h ${minutes}m`;
   }
 
-  const handleEditEntry = (timeEntry) => {
+  const handleEditEntry = (timeEntry: TimeEntry) => {
     console.log(timeEntry);
   }
 
@@ -38,7 +37,7 @@ function EntryList() {
         </thead>
         <tbody>
           {timeEntries.map(timeEntry => (
-            <tr key={timeEntries.id}>
+            <tr key={timeEntry.id}>
               <td>
                 <button type="button" onClick={() => handleEditEntry(timeEntry)} className="normal">📝</button>
                 {timeEntry.start.toLocaleDateString()}
