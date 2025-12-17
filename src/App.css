@@ -1,0 +1,110 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.selection-total-container {
+  border: 1px solid;
+  border-radius: 3px;
+}
+
+.spa-container {
+  display:flex;
+  gap: 12px;
+}
+
+.entry-list-container {
+  border: 1px solid;
+  min-height: 300px;
+}
+
+.time-entry-line-container>div:nth-child(odd) {
+  background: #dcdcdc;
+}
+
+.time-entry-line-container {
+  height: 300px;
+  overflow: auto;
+}
+
+.time-entry-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.time-entries-table {
+  border-collapse: collapse;
+}
+
+.time-entries-table tbody tr:nth-child(odd) {
+  background: #dcdcdc;
+}
+
+button.normal {
+  padding: 0;
+  margin: 0;
+  border: none
+}
+
+button.normal:focus {
+  border: none;
+}
+
+.company-selection-container {
+  display: flex;
+  gap: 12px;
+}
+
+.record-time-container {
+}
+
+button.record-punch {
+  background: #ff0000;
+  border: 1px solid;
+  width: 150px;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+button:disabled {
+  background: #fff;
+}
