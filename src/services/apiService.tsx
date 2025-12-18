@@ -53,7 +53,7 @@ export const saveTimeEntry = async (payload: any): Promise<TimeEntry[]> => {
   return response.json();
 };
 
-export const deleteTimeEntry = async (payload: any): any => {
+export const deleteTimeEntry = async (payload: any): Promise<any> => {
   const response = await fetch(`${API_BASE_URL}/time-entries`, {
     method: 'DELETE',
     headers: {

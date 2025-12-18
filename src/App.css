@@ -55,6 +55,7 @@
   border: 1px solid;
   border-radius: 3px;
   min-height: 300px;
+  min-width: 600px;
 }
 
 .time-entry-line-container>div:nth-child(odd) {
@@ -94,19 +95,36 @@ button.normal:focus {
 .company-selection-container {
   display: flex;
   gap: 12px;
+  justify-content: center;
+  align-items: center;
+  padding: 5%;
 }
 
 .record-time-container {
+  display: flex;
+  justify-content: center;
 }
 
-button.record-punch {
-  background: #216ba5;
-  color: #dcdcdc;
-  font-weight: bold;
-  border: 1px solid;
-  width: 150px;
-  padding: 5px;
-  border-radius: 5px;
+.record-time-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.record-time-div {
+  display: grid;
+  grid-template-columns: 120px 240px 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.record-time-div button {
+  width: 100%;
+}
+
+.record-time-div input {
+  width: 100%;
 }
 
 button:disabled {

@@ -1,12 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import '../App.css';
 import { useTimeStore } from '../hooks/useTimeStore';
 import type { TimeEntry } from '../types/TimeEntry';
+import EditTimeModal from './EditTimeModal';
 
 function EntryList() {
   const timeEntries = useTimeStore((state) => state.entries);
   const refreshTimeEntries = useTimeStore((state) => state.refreshEntries);
   const deleteEntry = useTimeStore((state) => state.deleteEntry);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedEntry, setSelectedEntry] = useState<TimeEntry | null>(null);
+
   useEffect(() => {
     refreshTimeEntries()
   }, [])
@@ -21,9 +25,10 @@ function EntryList() {
     return `${hours}h ${minutes}m`;
   }
 
-  const handleEditEntry = (timeEntry: TimeEntry) => {
-    console.log(timeEntry);
-  }
+  const handleEditEntry = (entry: TimeEntry) => {
+    setSelectedEntry(entry);
+    setShowModal(true);
+  };
 
   const handleDeleteEntry = async (timeEntry: TimeEntry) => {
     if(confirm('Are you sure?')) {
@@ -44,11 +49,12 @@ function EntryList() {
           </tr>
         </thead>
         <tbody>
+          {timeEntries.length === 0 && <tr><td colspan="5">No Entries</td></tr>}
           {timeEntries.map(timeEntry => (
             <tr key={timeEntry.id}>
               <td>
-                <button type="button" onClick={() => handleEditEntry(timeEntry)} className="normal">📝</button>
-                <button type="button" onClick={() => handleDeleteEntry(timeEntry)} className="normal">❌</button>
+                <button type="button" onClick={() => handleEditEntry(timeEntry)} className="normal mx-2">📝</button>
+                <button type="button" onClick={() => handleDeleteEntry(timeEntry)} className="normal mx-2">❌</button>
               </td>
               <td>
                 {timeEntry.start.toLocaleDateString()}
@@ -67,6 +73,11 @@ function EntryList() {
           ))}
         </tbody>
       </table>
+      <EditTimeModal
+        show={showModal}
+        handleClose={() => setShowModal(false)}
+        entryToEdit={selectedEntry}
+      />
     </div>
   );
 }

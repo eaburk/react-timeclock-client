@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import '../App.css';
 import { saveTimeEntry } from '../services/apiService';
 import { useTimeStore } from '../hooks/useTimeStore';
+import type { DateValue } from '../types/dataTypes';
 
 function RecordTimeWidget() {
   const [clockedIn, setClockedIn] = useState(false);
   const [clockInTime, setClockInTime] = useState('');
-  const [clockOutTime, setClockOutTime] = useState('');
-  const [inputDisabled, setInputDisabled] = useState(true);
-  const [now, setNow] = useState(null);
+  const [clockOutTime, setClockOutTime] = useState<string>('');
+  const [inputDisabled, setInputDisabled] = useState<boolean>(true);
+  const [now, setNow] = useState<DateValue>(null);
   const refreshTimeEntries = useTimeStore((state) => state.refreshEntries);
   const setCurrentClockIn = useTimeStore((state) => state.setCurrentClockIn);
 
@@ -34,6 +35,7 @@ function RecordTimeWidget() {
 
   const handleClockOut = async () => {
     setClockedIn(false);
+    setCurrentClockIn(null);
     const clockOutTime = (new Date()).toLocaleString('en-CA', {
       year: 'numeric',
       month: '2-digit',
@@ -58,25 +60,25 @@ function RecordTimeWidget() {
     setInputDisabled(!inputDisabled);
   }
 
-  const handleClockInChange = (event, value) => {
-    setClockInTime(event.target.value);
-    setNow(new Date(event.target.value));
+  const handleClockInChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setClockInTime(event.currentTarget.value);
+    setNow(event.currentTarget.value ? (new Date(event.currentTarget.value)) : null);
   }
 
   return (
     <div className="record-time-container">
       <form>
-        <div>
-          <button disabled={clockedIn} className="record-punch" onClick={handleClockIn}>
+        <div className="record-time-div">
+          <button disabled={clockedIn} className="btn btn-primary" onClick={handleClockIn}>
             Clock In
           </button>
 
-          <input type="text" name="startDate" disabled={inputDisabled} value={clockInTime} onChange={event => handleClockInChange(event)} />
+          <input className='form-input' type="text" name="startDate" disabled={inputDisabled} value={clockInTime} onChange={event => handleClockInChange(event)} />
 
           <button type="button" onClick={handleEditTime} className='normal'>📝</button>
          </div>
-        <div>
-          <button disabled={!clockedIn} className="record-punch" onClick={handleClockOut}>
+        <div className="record-time-div">
+          <button disabled={!clockedIn} className="btn btn-secondary" onClick={handleClockOut}>
             Clock Out
           </button>
 

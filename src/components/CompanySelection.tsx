@@ -22,7 +22,7 @@ function CompanySelection() {
         Company:
       </div>
       <div>
-        <select id='slctCompany'>
+        <select id='slctCompany' className='form-select'>
           {companies.map(company => (
             <option key={company.id} value={company.id}>
               {company.description}
