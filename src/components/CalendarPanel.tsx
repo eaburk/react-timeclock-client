@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DatePicker from "react-datepicker";
+import TotalTime from "../components/TotalTime";
 import "react-datepicker/dist/react-datepicker.css";
 import type { DateValue } from "../types/dataTypes";
 import '../App.css';
@@ -22,21 +23,17 @@ function CalendarPanel() {
   };
 
   return (
-    <>
-      <div>
-        <DatePicker
-          selected={startDate}
-          onChange={handleChange}
-          startDate={startDate}
-          endDate={endDate}
-          inline
-          selectsRange
-        />
-      </div>
-      <div className="selection-total-container">
-        Selection Total:
-      </div>
-    </>
+    <div>
+      <DatePicker
+        selected={startDate}
+        onChange={handleChange}
+        startDate={startDate}
+        endDate={endDate}
+        inline
+        selectsRange
+      />
+      <TotalTime />
+    </div>
   );
 }
 

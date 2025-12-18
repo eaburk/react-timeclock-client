@@ -6,6 +6,7 @@ import type { TimeEntry } from '../types/TimeEntry';
 function EntryList() {
   const timeEntries = useTimeStore((state) => state.entries);
   const refreshTimeEntries = useTimeStore((state) => state.refreshEntries);
+  const deleteEntry = useTimeStore((state) => state.deleteEntry);
   useEffect(() => {
     refreshTimeEntries()
   }, [])
@@ -24,11 +25,18 @@ function EntryList() {
     console.log(timeEntry);
   }
 
+  const handleDeleteEntry = async (timeEntry: TimeEntry) => {
+    if(confirm('Are you sure?')) {
+      await deleteEntry(timeEntry.id);
+    }
+  }
+
   return (
     <div className="time-entry-line-container">
       <table className="time-entries-table" style={{width: "100%"}}>
         <thead>
           <tr>
+            <th></th>
             <th>Date</th>
             <th>Time In</th>
             <th>Time Out</th>
@@ -40,6 +48,9 @@ function EntryList() {
             <tr key={timeEntry.id}>
               <td>
                 <button type="button" onClick={() => handleEditEntry(timeEntry)} className="normal">📝</button>
+                <button type="button" onClick={() => handleDeleteEntry(timeEntry)} className="normal">❌</button>
+              </td>
+              <td>
                 {timeEntry.start.toLocaleDateString()}
                 {timeEntry.start.toLocaleDateString() !== timeEntry.end.toLocaleDateString() ? `${- timeEntry.end.toLocaleDateString()}`: ""}
               </td>

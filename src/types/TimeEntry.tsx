@@ -1,7 +1,8 @@
 export interface TimeEntry {
   id: number;
-  startTime: Date;
-  endTime: Date;
+  startDate: Date;
+  endDate: Date;
   start: Date;
   end: Date;
+  durationMinutes: number
 }

@@ -1,5 +1,6 @@
 import type { Company } from '../types/Company';
 import type { TimeEntry } from '../types/TimeEntry';
+import { toYYMMDDLocal } from '../utilities/dateFormatters';
 
 const API_BASE_URL = 'http://192.168.68.94:5000/api';
 
@@ -18,7 +19,12 @@ export const fetchTimeEntries = async (startDate: Date, endDate: Date, company: 
   if(!startDate || !endDate) {
     return [];
   }
-  const response = await fetch(`${API_BASE_URL}/time-entries?startDate=${startDate.toISOString().slice(0,10)}&endDate=${endDate.toISOString().slice(0,10)}&company=${company}`);
+
+  const newStartDate = toYYMMDDLocal(startDate);
+  const newEndDate = toYYMMDDLocal(endDate);
+
+  
+  const response = await fetch(`${API_BASE_URL}/time-entries?startDate=${newStartDate}&endDate=${newEndDate}&company=${company}`);
 
   if (!response.ok) throw new Error('Failed to fetch time entries');
 
@@ -32,6 +38,8 @@ export const fetchTimeEntries = async (startDate: Date, endDate: Date, company: 
 };
 
 export const saveTimeEntry = async (payload: any): Promise<TimeEntry[]> => {
+  payload.startDate = new Date(payload.startDate.replace(" ", "T"));
+  payload.endDate = new Date(payload.endDate.replace(" ", "T"));
   const response = await fetch(`${API_BASE_URL}/time-entries`, {
     method: 'POST',
     headers: {
@@ -40,7 +48,21 @@ export const saveTimeEntry = async (payload: any): Promise<TimeEntry[]> => {
     body: JSON.stringify(payload)
   });
 
-  if (!response.ok) throw new Error('Failed to fetch time entries');
+  if (!response.ok) throw new Error('Failed to save time entries');
+
+  return response.json();
+};
+
+export const deleteTimeEntry = async (payload: any): any => {
+  const response = await fetch(`${API_BASE_URL}/time-entries`, {
+    method: 'DELETE',
+    headers: {
+     'Content-Type': 'application/json', 
+    },
+    body: JSON.stringify({id: payload})
+  });
+
+  if (!response.ok) throw new Error('Failed to delete time entry');
 
   return response.json();
 };
