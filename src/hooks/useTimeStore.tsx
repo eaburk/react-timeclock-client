@@ -1,7 +1,6 @@
 import { create } from 'zustand';
-import { fetchTimeEntries, deleteTimeEntry } from '../services/apiService';
-import type { TimeStore } from '../types/TimeStore';
-import type { DateValue } from '../types/dataTypes';
+import { fetchTimeEntries, deleteTimeEntry } from '../services';
+import type { TimeStore, DateNull } from '../types';
 
 export const useTimeStore = create<TimeStore>((set, get) => ({
   entries: [],
@@ -9,7 +8,7 @@ export const useTimeStore = create<TimeStore>((set, get) => ({
   filterStart: new Date(),
   filterEnd: new Date(),
 
-  setCurrentClockIn: async (clockIn: DateValue): Promise<void> => {
+  setCurrentClockIn: async (clockIn: DateNull): Promise<void> => {
     set({currentClockIn: clockIn});
   },
 

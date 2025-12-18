@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import { useTimeStore } from '../hooks/useTimeStore';
-import type { TimeEntry } from '../types/TimeEntry';
+import { useTimeStore } from '../hooks';
+import type { TimeEntry } from '../types';
 
 type EditTimeModalProps = {
   show: boolean;
@@ -14,7 +14,7 @@ const EditTimeModal: React.FC<EditTimeModalProps> = ({ show, handleClose, entryT
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
 
-  const getLocalDatetimeString = (curDate) => {
+  const getLocalDatetimeString = (curDate: Date) => {
     const now = curDate;
     // Offset in minutes
     const offset = now.getTimezoneOffset(); 

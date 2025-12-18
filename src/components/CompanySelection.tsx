@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import type { Company } from "../types/Company";
+import type { Company } from "../types";
 import '../App.css';
-import { fetchCompanies } from "../services/apiService";
+import { fetchCompanies } from "../services";
 
-function CompanySelection() {
+const CompanySelection = () => {
   const [companies, setCompanies] = useState<Company[]>([]);
 
   useEffect(() => {

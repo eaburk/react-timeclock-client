@@ -1,12 +1,12 @@
-import type { TimeEntry } from './TimeEntry';
-import type { DateValue } from './dataTypes';
+import type { TimeEntry } from './';
+import type { DateNull } from './';
 
 export interface TimeStore {
   entries: TimeEntry[];
-  currentClockIn: DateValue;
+  currentClockIn: DateNull;
   filterStart: Date;
   filterEnd: Date;
   refreshEntries: (newStart?: Date, newEnd?: Date) => Promise<void>;
-  setCurrentClockIn: (clockIn: DateValue) => Promise<void>;
+  setCurrentClockIn: (clockIn: DateNull) => Promise<void>;
   deleteEntry: (entryId: number) => Promise<void>;
 }

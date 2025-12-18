@@ -1,18 +1,18 @@
 import { useState } from "react";
 import DatePicker from "react-datepicker";
-import TotalTime from "../components/TotalTime";
+import { TotalTime } from "../components";
 import "react-datepicker/dist/react-datepicker.css";
-import type { DateValue } from "../types/dataTypes";
+import type { DateNull } from "../types";
 import '../App.css';
-import { useTimeStore } from '../hooks/useTimeStore';
+import { useTimeStore } from '../hooks';
 
 
-function CalendarPanel() {
-  const [startDate, setStartDate] = useState<DateValue>(new Date());
-  const [endDate, setEndDate] = useState<DateValue>(new Date());
+const CalendarPanel = () => {
+  const [startDate, setStartDate] = useState<DateNull>(new Date());
+  const [endDate, setEndDate] = useState<DateNull>(new Date());
   const refreshTimeEntries = useTimeStore((state) => state.refreshEntries);
 
-  const handleChange = (dates: [DateValue, DateValue]) => {
+  const handleChange = (dates: [DateNull, DateNull]) => {
     const [start, end] = dates;
     setStartDate(start);
     setEndDate(end);

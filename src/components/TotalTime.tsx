@@ -1,7 +1,7 @@
 import '../App.css';
-import { useTimeStore } from '../hooks/useTimeStore';
+import { useTimeStore } from '../hooks';
 
-function TotalTime() {
+const TotalTime = () => {
   const totalMinutes = useTimeStore((state) =>
      state.entries.reduce((sum, entry) => sum + entry.durationMinutes, 0)
    )

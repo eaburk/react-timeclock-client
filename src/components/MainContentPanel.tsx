@@ -3,7 +3,7 @@ import CompanySelection from './CompanySelection';
 import RecordTimeWidget from './RecordTimeWidget';
 import EntryList from './EntryList';
 
-function MainContentPanel() {
+const MainContentPanel = () => {
 
   return (
     <div className="entry-list-container">

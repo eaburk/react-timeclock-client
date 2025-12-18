@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import '../App.css';
-import { useTimeStore } from '../hooks/useTimeStore';
-import type { TimeEntry } from '../types/TimeEntry';
+import { useTimeStore } from '../hooks';
+import type { TimeEntry } from '../types';
 import EditTimeModal from './EditTimeModal';
 
-function EntryList() {
+const EntryList = () => {
   const timeEntries = useTimeStore((state) => state.entries);
   const refreshTimeEntries = useTimeStore((state) => state.refreshEntries);
   const deleteEntry = useTimeStore((state) => state.deleteEntry);
@@ -49,7 +49,7 @@ function EntryList() {
           </tr>
         </thead>
         <tbody>
-          {timeEntries.length === 0 && <tr><td colspan="5">No Entries</td></tr>}
+          {timeEntries.length === 0 && <tr><td colSpan={5}>No Entries</td></tr>}
           {timeEntries.map(timeEntry => (
             <tr key={timeEntry.id}>
               <td>

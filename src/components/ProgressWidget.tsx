@@ -1,7 +1,7 @@
 import '../App.css';
-import { useTimeStore } from '../hooks/useTimeStore';
-import { useNow } from '../hooks/useNow';
-import { isSameDay } from '../utilities/isSameDay';
+import { useTimeStore } from '../hooks';
+import { useNow } from '../hooks';
+import { isSameDay } from '../utilities';
 
 const EIGHT_HOURS_MINUTES = 8 * 60
 function ProgressWidget() {

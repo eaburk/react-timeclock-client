@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import '../App.css';
-import { saveTimeEntry } from '../services/apiService';
-import { useTimeStore } from '../hooks/useTimeStore';
-import type { DateValue } from '../types/dataTypes';
+import { saveTimeEntry } from '../services';
+import { useTimeStore } from '../hooks';
+import type { DateNull } from '../types';
 
-function RecordTimeWidget() {
+const RecordTimeWidget = () => {
   const [clockedIn, setClockedIn] = useState(false);
   const [clockInTime, setClockInTime] = useState('');
   const [clockOutTime, setClockOutTime] = useState<string>('');
   const [inputDisabled, setInputDisabled] = useState<boolean>(true);
-  const [now, setNow] = useState<DateValue>(null);
+  const [now, setNow] = useState<DateNull>(null);
   const refreshTimeEntries = useTimeStore((state) => state.refreshEntries);
   const setCurrentClockIn = useTimeStore((state) => state.setCurrentClockIn);
 

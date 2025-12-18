@@ -1,9 +1,7 @@
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import './App.css'
-import CalendarPanel from './components/CalendarPanel';
-import MainContentPanel from './components/MainContentPanel';
-import ProgressWidget from './components/ProgressWidget';
+import  { CalendarPanel, MainContentPanel, ProgressWidget } from './components';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {

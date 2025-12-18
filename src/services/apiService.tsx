@@ -1,5 +1,4 @@
-import type { Company } from '../types/Company';
-import type { TimeEntry } from '../types/TimeEntry';
+import type { Company, TimeEntry } from '../types';
 import { toYYMMDDLocal } from '../utilities/dateFormatters';
 
 const API_BASE_URL = 'http://192.168.68.94:5000/api';
