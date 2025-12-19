@@ -10,9 +10,11 @@ const EntryList = () => {
   const deleteEntry = useTimeStore((state) => state.deleteEntry);
   const [showModal, setShowModal] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<TimeEntry | null>(null);
+  const setActiveEntry = useTimeStore((state) => state.setActiveEntry);
+  const activeEntry = useTimeStore((state) => state.activeEntry);
 
   useEffect(() => {
-    refreshTimeEntries()
+    refreshTimeEntries();
   }, [])
 
   const getTotalTime = (timeEntry: TimeEntry) => {
@@ -34,6 +36,10 @@ const EntryList = () => {
     if(confirm('Are you sure?')) {
       await deleteEntry(timeEntry.id);
     }
+  }
+
+  const handleResumeEntry = (timeEntry: TimeEntry) => {
+    setActiveEntry(timeEntry);
   }
 
   return (
@@ -64,10 +70,12 @@ const EntryList = () => {
                 {timeEntry.start.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})}
               </td>
               <td>
-                {timeEntry.end.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})}
+                {timeEntry.endDate !== '' && timeEntry.end.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})}
+                {timeEntry.endDate === '' && timeEntry.id !== activeEntry.id && <button onClick={() => handleResumeEntry(timeEntry)} className='link-button'>Resume</button>}
+                {timeEntry.endDate === '' && timeEntry.id === activeEntry.id && <div class='link-button'>In Progress</div>}
               </td>
               <td>
-                {getTotalTime(timeEntry)}
+                {timeEntry.endDate !== '' && getTotalTime(timeEntry)}
               </td>
             </tr>
           ))}
