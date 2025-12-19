@@ -33,6 +33,10 @@ const EntryList = () => {
   };
 
   const handleDeleteEntry = async (timeEntry: TimeEntry) => {
+    if(timeEntry.endDate === "") {
+      confirm("You can't delete an in progress entry");
+      return;
+    }
     if(confirm('Are you sure?')) {
       await deleteEntry(timeEntry.id);
     }
@@ -64,15 +68,14 @@ const EntryList = () => {
               </td>
               <td>
                 {timeEntry.start.toLocaleDateString()}
-                {timeEntry.start.toLocaleDateString() !== timeEntry.end.toLocaleDateString() ? `${- timeEntry.end.toLocaleDateString()}`: ""}
               </td>
               <td>
                 {timeEntry.start.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})}
               </td>
               <td>
                 {timeEntry.endDate !== '' && timeEntry.end.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})}
-                {timeEntry.endDate === '' && timeEntry.id !== activeEntry.id && <button onClick={() => handleResumeEntry(timeEntry)} className='link-button'>Resume</button>}
-                {timeEntry.endDate === '' && timeEntry.id === activeEntry.id && <div class='link-button'>In Progress</div>}
+                {timeEntry.endDate === '' && timeEntry.id !== activeEntry?.id && <button onClick={() => handleResumeEntry(timeEntry)} className='link-button'>Resume</button>}
+                {timeEntry.endDate === '' && timeEntry.id === activeEntry?.id && <div className='link-button'>In Progress</div>}
               </td>
               <td>
                 {timeEntry.endDate !== '' && getTotalTime(timeEntry)}

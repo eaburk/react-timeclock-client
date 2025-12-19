@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import '../App.css';
-import { saveTimeEntry, updateTimeEntry } from '../services';
+import { saveTimeEntry, updateTimeEntry, deleteTimeEntry } from '../services';
 import { useTimeStore } from '../hooks';
 
 const RecordTimeWidget = () => {
@@ -8,6 +8,7 @@ const RecordTimeWidget = () => {
   const refreshTimeEntries = useTimeStore((state) => state.refreshEntries);
   const setActiveEntry = useTimeStore((state) => state.setActiveEntry);
   const activeEntry = useTimeStore((state) => state.activeEntry);
+
 
   function formatLocalDateTime(date) {
     const year = date?.getFullYear();
@@ -64,13 +65,17 @@ const RecordTimeWidget = () => {
     formData.set('id', activeEntry.id);
     formData.set('startDate', formatLocalDateTime(activeEntry.start));
     formData.set('endDate', formatLocalDateTime(clockOutDate));
-    await updateTimeEntry(Object.fromEntries(formData.entries()));
 
+    await updateTimeEntry(Object.fromEntries(formData.entries()));
     await refreshTimeEntries();
   }
 
-  const handleClockInChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //setClockInTime(event.currentTarget.value);
+  const handleCancel = async () => {
+    if(confirm('Also delete this entry?')) {
+      await deleteTimeEntry(activeEntry.id);
+      refreshTimeEntries();
+    }
+    setActiveEntry(null);
   }
 
   return (
@@ -89,6 +94,8 @@ const RecordTimeWidget = () => {
           </button>
 
           <input type="datetime-local" name="endDate" disabled value={clockOutTime} onChange={event => setClockOutTime(event.target.value)} />
+
+          {activeEntry && <button type="button" class="link-button" onClick={handleCancel}>Cancel</button>}
 
         </div>
       </form>

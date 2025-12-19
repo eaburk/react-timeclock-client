@@ -20,7 +20,7 @@ export const fetchTimeEntries = async (startDate: Date, endDate: Date, company: 
   }
 
   const newStartDate = toYYMMDDLocal(startDate);
-  const newEndDate = toYYMMDDLocal(endDate);
+  const newEndDate = toYYMMDDLocal(new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 1));
 
 
   const response = await fetch(`${API_BASE_URL}/time-entries?startDate=${newStartDate}&endDate=${newEndDate}&company=${company}`);

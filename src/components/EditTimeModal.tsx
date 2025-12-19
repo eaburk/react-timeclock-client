@@ -47,7 +47,6 @@ const EditTimeModal: React.FC<EditTimeModalProps> = ({ show, handleClose, entryT
     }
 
     await updateTimeEntry(entryToEdit);
-    console.log(entryToEdit);
     setActiveEntry(entryToEdit);
     handleClose();
     await refreshEntries();

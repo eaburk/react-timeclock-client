@@ -41,18 +41,14 @@
   color: #888;
 }
 
-.selection-total-container {
-  border: 1px solid;
-  border-radius: 3px;
-}
-
 .spa-container {
   display:flex;
   gap: 12px;
 }
 
 .entry-list-container {
-  border: 1px solid;
+  border: 1px solid #dcdcdc;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
   border-radius: 3px;
   min-height: 300px;
   min-width: 600px;
@@ -133,7 +129,7 @@ button:disabled {
 
 .total-time {
   border-radius: 3px;
-  border: 1px solid;
+  border: 1px solid #dcdcdc;
 }
 
 .bar {
@@ -157,4 +153,11 @@ button:disabled {
 }
 .link-button:hover {
   color: #535bf2;
+}
+
+.calendar-panel-container {
+  border: 1px solid #dcdcdc;
+  border-radius: 3px;
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
+  padding: 10px;
 }

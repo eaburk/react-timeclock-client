@@ -6,7 +6,7 @@ import { isSameDay } from '../utilities';
 const EIGHT_HOURS_MINUTES = 8 * 60
 function ProgressWidget() {
   const activeEntry = useTimeStore((state) => state.activeEntry);
-  const currentClockIn = new Date(activeEntry?.startDate);
+  const currentClockIn = activeEntry ? new Date(activeEntry?.startDate) : null;
   const timeEntries = useTimeStore((state) => state.entries);
   const now = useNow(1000);
 
