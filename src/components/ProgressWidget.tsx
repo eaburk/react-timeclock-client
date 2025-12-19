@@ -5,7 +5,8 @@ import { isSameDay } from '../utilities';
 
 const EIGHT_HOURS_MINUTES = 8 * 60
 function ProgressWidget() {
-  const currentClockIn = useTimeStore((state) => state.currentClockIn);
+  const activeEntry = useTimeStore((state) => state.activeEntry);
+  const currentClockIn = activeEntry ? new Date(activeEntry?.startDate) : null;
   const timeEntries = useTimeStore((state) => state.entries);
   const now = useNow(1000);
 
@@ -16,6 +17,7 @@ function ProgressWidget() {
     .filter(entry =>
       entry.startDate &&
       entry.startDate &&
+      entry.endDate !== "" &&
       isSameDay(entry.start, today)
     )
     .reduce((total, entry) => {

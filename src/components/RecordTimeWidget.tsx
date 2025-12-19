@@ -1,23 +1,30 @@
 import { useState, useEffect } from "react";
 import '../App.css';
-import { saveTimeEntry } from '../services';
+import { saveTimeEntry, updateTimeEntry, deleteTimeEntry } from '../services';
 import { useTimeStore } from '../hooks';
-import type { DateNull } from '../types';
 
 const RecordTimeWidget = () => {
-  const [clockedIn, setClockedIn] = useState(false);
-  const [clockInTime, setClockInTime] = useState('');
   const [clockOutTime, setClockOutTime] = useState<string>('');
-  const [inputDisabled, setInputDisabled] = useState<boolean>(true);
-  const [now, setNow] = useState<DateNull>(null);
   const refreshTimeEntries = useTimeStore((state) => state.refreshEntries);
-  const setCurrentClockIn = useTimeStore((state) => state.setCurrentClockIn);
+  const setActiveEntry = useTimeStore((state) => state.setActiveEntry);
+  const activeEntry = useTimeStore((state) => state.activeEntry);
 
-  const handleClockIn = () => {
-    setClockedIn(true);
-    const newNow = new Date();
-    setNow(newNow);
-    setClockInTime(newNow.toLocaleString('en-CA', {
+
+  function formatLocalDateTime(date) {
+    if(!date) return '';
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  }
+
+  const handleClockIn = async () => {
+    const newNow = (new Date()).toLocaleString('en-CA', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
@@ -25,18 +32,24 @@ const RecordTimeWidget = () => {
       minute: '2-digit',
       second: '2-digit',
       hour12: false
-    }).replace(',', ''));
+    }).replace(',', '');
+
+    const formData = new FormData();
+    formData.set('endDate', '');
+    formData.set('startDate', newNow);
+
+    const newEntry = await saveTimeEntry(Object.fromEntries(formData.entries()));
+
+    await setActiveEntry(newEntry);
+    await refreshTimeEntries();
     setClockOutTime('');
-    setInputDisabled(true);
+
+    await refreshTimeEntries();
   }
-  useEffect(() => {
-    setCurrentClockIn(now);
-  }, [now]);
 
   const handleClockOut = async () => {
-    setClockedIn(false);
-    setCurrentClockIn(null);
-    const clockOutTime = (new Date()).toLocaleString('en-CA', {
+    const clockOutDate = new Date();
+    const clockOutTime = clockOutDate.toLocaleString('en-CA', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
@@ -46,43 +59,44 @@ const RecordTimeWidget = () => {
       hour12: false
     }).replace(',', '');
     setClockOutTime(clockOutTime);
-    setInputDisabled(true);
+
+    await setActiveEntry(null);
 
     const formData = new FormData();
-    formData.set('endDate', clockOutTime);
-    formData.set('startDate', clockInTime);
-    await saveTimeEntry(Object.fromEntries(formData.entries()));
+    formData.set('id', activeEntry.id);
+    formData.set('startDate', formatLocalDateTime(activeEntry.start));
+    formData.set('endDate', formatLocalDateTime(clockOutDate));
 
+    await updateTimeEntry(Object.fromEntries(formData.entries()));
     await refreshTimeEntries();
   }
 
-  const handleEditTime = () => {
-    setInputDisabled(!inputDisabled);
-  }
-
-  const handleClockInChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setClockInTime(event.currentTarget.value);
-    setNow(event.currentTarget.value ? (new Date(event.currentTarget.value)) : null);
+  const handleCancel = async () => {
+    if(confirm('Also delete this entry?')) {
+      await deleteTimeEntry(activeEntry.id);
+      await refreshTimeEntries();
+    }
+    await setActiveEntry(null);
   }
 
   return (
     <div className="record-time-container">
       <form>
         <div className="record-time-div">
-          <button disabled={clockedIn} className="btn btn-primary" onClick={handleClockIn}>
+          <button type="button" disabled={activeEntry !== null} className="btn btn-primary" onClick={handleClockIn}>
             Clock In
           </button>
 
-          <input className='form-input' type="text" name="startDate" disabled={inputDisabled} value={clockInTime} onChange={event => handleClockInChange(event)} />
-
-          <button type="button" onClick={handleEditTime} className='normal'>📝</button>
+          <input className='form-input' type="datetime-local" name="startDate" disabled value={formatLocalDateTime(activeEntry?.start) ?? ''} onChange={event => handleClockInChange(event)} />
          </div>
         <div className="record-time-div">
-          <button disabled={!clockedIn} className="btn btn-secondary" onClick={handleClockOut}>
+          <button type="button" disabled={activeEntry === null} className="btn btn-secondary" onClick={handleClockOut}>
             Clock Out
           </button>
 
-          <input type="text" name="endDate" disabled={inputDisabled} value={clockOutTime} onChange={event => setClockOutTime(event.target.value)} />
+          <input type="datetime-local" name="endDate" disabled value={clockOutTime} onChange={event => setClockOutTime(event.target.value)} />
+
+          {activeEntry && <button type="button" className="link-button" onClick={handleCancel}>Cancel</button>}
 
         </div>
       </form>

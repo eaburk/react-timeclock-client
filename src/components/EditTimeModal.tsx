@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { useTimeStore } from '../hooks';
 import type { TimeEntry } from '../types';
+import { updateTimeEntry } from '../services';
 
 type EditTimeModalProps = {
   show: boolean;
@@ -13,6 +14,7 @@ const EditTimeModal: React.FC<EditTimeModalProps> = ({ show, handleClose, entryT
   const refreshEntries = useTimeStore((state) => state.refreshEntries);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
+  const setActiveEntry = useTimeStore((state) => state.setActiveEntry);
 
   const getLocalDatetimeString = (curDate: Date) => {
     const now = curDate;
@@ -27,32 +29,27 @@ const EditTimeModal: React.FC<EditTimeModalProps> = ({ show, handleClose, entryT
   useEffect(() => {
     if (entryToEdit) {
       setStartTime(getLocalDatetimeString(new Date(entryToEdit.startDate))); // YYYY-MM-DDTHH:MM
-      setEndTime(getLocalDatetimeString(new Date(entryToEdit.endDate))); // YYYY-MM-DDTHH:MM
+      if(entryToEdit.endDate !== "") {
+        setEndTime(getLocalDatetimeString(new Date(entryToEdit.endDate))); // YYYY-MM-DDTHH:MM
+      }
     }
   }, [entryToEdit]);
   
-  //useEffect(() => {
-    //console.log(startTime);
-  //}, [startTime]);
-
   const handleSave = async () => {
     if (!entryToEdit) return;
 
-    try {
-      await fetch(`/api/time-entries/${entryToEdit.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          clockIn: new Date(startTime).toISOString(),
-          clockOut: endTime ? new Date(endTime).toISOString() : null,
-        }),
-      });
 
-      handleClose();
-      refreshEntries(); // update the time entries list
-    } catch (error) {
-      console.error('Error updating time entry:', error);
+    entryToEdit.startDate = new Date(startTime).toISOString();
+    entryToEdit.start = new Date(entryToEdit.startDate);
+    if(endTime !== "") {
+      entryToEdit.endDate = new Date(endTime).toISOString();
+    entryToEdit.end = new Date(entryToEdit.endDate);
     }
+
+    await updateTimeEntry(entryToEdit);
+    setActiveEntry(entryToEdit);
+    handleClose();
+    await refreshEntries();
   };
 
   return (

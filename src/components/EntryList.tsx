@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import '../App.css';
-import { useTimeStore } from '../hooks';
+import { useTimeStore, useNow } from '../hooks';
 import type { TimeEntry } from '../types';
 import EditTimeModal from './EditTimeModal';
 
@@ -10,9 +10,25 @@ const EntryList = () => {
   const deleteEntry = useTimeStore((state) => state.deleteEntry);
   const [showModal, setShowModal] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<TimeEntry | null>(null);
+  const setActiveEntry = useTimeStore((state) => state.setActiveEntry);
+  const activeEntry = useTimeStore((state) => state.activeEntry);
+
+  const now = useNow(1000);
+  let currentSessionMinutes = 0;
+  let hour = 0;
+  let minute = 0;
+  const currentClockIn = activeEntry ? new Date(activeEntry?.startDate) : null;
+
+  if(activeEntry) {
+    currentSessionMinutes = currentClockIn
+      ? Math.max(0, (now - currentClockIn.getTime()) / 60000)
+      : 0;
+    hour = Math.floor(currentSessionMinutes / 60);
+    minute = Math.floor(currentSessionMinutes % 60);
+  }
 
   useEffect(() => {
-    refreshTimeEntries()
+    refreshTimeEntries();
   }, [])
 
   const getTotalTime = (timeEntry: TimeEntry) => {
@@ -31,9 +47,17 @@ const EntryList = () => {
   };
 
   const handleDeleteEntry = async (timeEntry: TimeEntry) => {
+    if(timeEntry.endDate === "") {
+      confirm("You can't delete an in progress entry");
+      return;
+    }
     if(confirm('Are you sure?')) {
       await deleteEntry(timeEntry.id);
     }
+  }
+
+  const handleResumeEntry = (timeEntry: TimeEntry) => {
+    setActiveEntry(timeEntry);
   }
 
   return (
@@ -58,16 +82,18 @@ const EntryList = () => {
               </td>
               <td>
                 {timeEntry.start.toLocaleDateString()}
-                {timeEntry.start.toLocaleDateString() !== timeEntry.end.toLocaleDateString() ? `${- timeEntry.end.toLocaleDateString()}`: ""}
               </td>
               <td>
                 {timeEntry.start.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})}
               </td>
               <td>
-                {timeEntry.end.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})}
+                {timeEntry.endDate !== '' && timeEntry.end.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})}
+                {timeEntry.endDate === '' && timeEntry.id !== activeEntry?.id && <button onClick={() => handleResumeEntry(timeEntry)} className='link-button'>Resume</button>}
+                {timeEntry.endDate === '' && timeEntry.id === activeEntry?.id && <div className='link-button'>In Progress</div>}
               </td>
               <td>
-                {getTotalTime(timeEntry)}
+                {timeEntry.endDate !== '' && getTotalTime(timeEntry)}
+                {timeEntry.endDate === '' && timeEntry.id === activeEntry?.id && <div className='link-button'>{hour}h {minute}m</div>}
               </td>
             </tr>
           ))}

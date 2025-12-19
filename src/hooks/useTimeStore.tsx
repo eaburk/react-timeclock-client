@@ -1,15 +1,21 @@
 import { create } from 'zustand';
 import { fetchTimeEntries, deleteTimeEntry } from '../services';
-import type { TimeStore, DateNull } from '../types';
+import type { TimeStore, DateNull, TimeEntry } from '../types';
 
 export const useTimeStore = create<TimeStore>((set, get) => ({
   entries: [],
-  currentClockIn: null,
+  activeEntry: null,
   filterStart: new Date(),
   filterEnd: new Date(),
 
-  setCurrentClockIn: async (clockIn: DateNull): Promise<void> => {
-    set({currentClockIn: clockIn});
+  setActiveEntry: async (timeEntry: TimeEntry | null) => {
+    if(timeEntry) {
+      timeEntry.durationMinutes =
+        timeEntry.endDate
+          ? Math.floor((timeEntry.endDate.getTime() - timeEntry.startTime.getTime()) / 60000)
+          : 0;
+    }
+    set({activeEntry: timeEntry});
   },
 
   refreshEntries: async (newStart?: Date, newEnd?: Date): Promise<void> => {
