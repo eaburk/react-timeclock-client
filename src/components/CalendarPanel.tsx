@@ -48,11 +48,11 @@ const CalendarPanel = () => {
         selectsRange
       />
       <div className="mb-2">
-        <button className="btn btn-secondary p-1" onClick={selectFullWeek}>
-          Select Week
+        <button className="btn btn-secondary p-1 m-1" onClick={selectFullWeek}>
+          Week
         </button>
         <button className="btn btn-secondary p-1 m-1" onClick={selectToday}>
-          Select Today
+          Today
         </button>
       </div>
       <TotalTime />

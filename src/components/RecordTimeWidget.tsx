@@ -11,8 +11,9 @@ const RecordTimeWidget = () => {
 
 
   function formatLocalDateTime(date) {
-    const year = date?.getFullYear();
-    if(!year) return;
+    if(!date) return '';
+
+    const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
     const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
@@ -73,9 +74,9 @@ const RecordTimeWidget = () => {
   const handleCancel = async () => {
     if(confirm('Also delete this entry?')) {
       await deleteTimeEntry(activeEntry.id);
-      refreshTimeEntries();
+      await refreshTimeEntries();
     }
-    setActiveEntry(null);
+    await setActiveEntry(null);
   }
 
   return (
@@ -86,7 +87,7 @@ const RecordTimeWidget = () => {
             Clock In
           </button>
 
-          <input className='form-input' type="datetime-local" name="startDate" disabled value={formatLocalDateTime(activeEntry?.start)} onChange={event => handleClockInChange(event)} />
+          <input className='form-input' type="datetime-local" name="startDate" disabled value={formatLocalDateTime(activeEntry?.start) ?? ''} onChange={event => handleClockInChange(event)} />
          </div>
         <div className="record-time-div">
           <button type="button" disabled={activeEntry === null} className="btn btn-secondary" onClick={handleClockOut}>
@@ -95,7 +96,7 @@ const RecordTimeWidget = () => {
 
           <input type="datetime-local" name="endDate" disabled value={clockOutTime} onChange={event => setClockOutTime(event.target.value)} />
 
-          {activeEntry && <button type="button" class="link-button" onClick={handleCancel}>Cancel</button>}
+          {activeEntry && <button type="button" className="link-button" onClick={handleCancel}>Cancel</button>}
 
         </div>
       </form>

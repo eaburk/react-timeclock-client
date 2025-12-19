@@ -14,7 +14,7 @@ export const useTimeStore = create<TimeStore>((set, get) => ({
         timeEntry.endDate
           ? Math.floor((timeEntry.endDate.getTime() - timeEntry.startTime.getTime()) / 60000)
           : 0;
-      }
+    }
     set({activeEntry: timeEntry});
   },
 
