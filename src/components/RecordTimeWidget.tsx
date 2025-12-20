@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import '../App.css';
-import { saveTimeEntry, updateTimeEntry, deleteTimeEntry } from '../services';
 import { useTimeStore } from '../hooks';
 
 const RecordTimeWidget = () => {
@@ -8,7 +7,9 @@ const RecordTimeWidget = () => {
   const refreshTimeEntries = useTimeStore((state) => state.refreshEntries);
   const setActiveEntry = useTimeStore((state) => state.setActiveEntry);
   const activeEntry = useTimeStore((state) => state.activeEntry);
-
+  const createEntry = useTimeStore(state => state.createEntry);
+  const updateEntry = useTimeStore(state => state.updateEntry);
+  const deleteEntry = useTimeStore(state => state.deleteEntry);
 
   function formatLocalDateTime(date) {
     if(!date) return '';
@@ -38,10 +39,9 @@ const RecordTimeWidget = () => {
     formData.set('endDate', '');
     formData.set('startDate', newNow);
 
-    const newEntry = await saveTimeEntry(Object.fromEntries(formData.entries()));
+    const newEntry = await createEntry(Object.fromEntries(formData.entries()));
 
     await setActiveEntry(newEntry);
-    await refreshTimeEntries();
     setClockOutTime('');
 
     await refreshTimeEntries();
@@ -67,13 +67,13 @@ const RecordTimeWidget = () => {
     formData.set('startDate', formatLocalDateTime(activeEntry.start));
     formData.set('endDate', formatLocalDateTime(clockOutDate));
 
-    await updateTimeEntry(Object.fromEntries(formData.entries()));
+    await updateEntry(Object.fromEntries(formData.entries()));
     await refreshTimeEntries();
   }
 
   const handleCancel = async () => {
     if(confirm('Also delete this entry?')) {
-      await deleteTimeEntry(activeEntry.id);
+      await deleteEntry(activeEntry.id);
       await refreshTimeEntries();
     }
     await setActiveEntry(null);

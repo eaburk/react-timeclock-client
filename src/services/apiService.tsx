@@ -104,11 +104,11 @@ export const updateTimeEntry = async (payload: any): Promise<TimeEntry> => {
 
   if (!response.ok) throw new Error('Failed to update time entry');
 
-  const createdEntry = await response.json();
+  const updatedEntry = await response.json();
 
   return {
-    ...createdEntry,
-    start: new Date(createdEntry.startDate),
+    ...updatedEntry,
+    start: new Date(updatedEntry.startDate),
     end: '',
   }
 };

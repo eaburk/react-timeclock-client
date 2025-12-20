@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { useTimeStore } from '../hooks';
 import type { TimeEntry } from '../types';
-import { updateTimeEntry } from '../services';
 
 type EditTimeModalProps = {
   show: boolean;
@@ -11,26 +10,23 @@ type EditTimeModalProps = {
 };
 
 const EditTimeModal: React.FC<EditTimeModalProps> = ({ show, handleClose, entryToEdit }) => {
-  const refreshEntries = useTimeStore((state) => state.refreshEntries);
+  const updateEntry = useTimeStore(state => state.updateEntry);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const setActiveEntry = useTimeStore((state) => state.setActiveEntry);
 
   const getLocalDatetimeString = (curDate: Date) => {
     const now = curDate;
-    // Offset in minutes
     const offset = now.getTimezoneOffset(); 
-    // Adjust time to local timezone
     const localTime = new Date(now.getTime() - (offset * 60000)); 
-    // Get ISO string and slice to the required format: YYYY-MM-DDTHH:mm
     return localTime.toISOString().slice(0, 16); 
   };
 
   useEffect(() => {
     if (entryToEdit) {
-      setStartTime(getLocalDatetimeString(new Date(entryToEdit.startDate))); // YYYY-MM-DDTHH:MM
+      setStartTime(getLocalDatetimeString(new Date(entryToEdit.startDate)));
       if(entryToEdit.endDate !== "") {
-        setEndTime(getLocalDatetimeString(new Date(entryToEdit.endDate))); // YYYY-MM-DDTHH:MM
+        setEndTime(getLocalDatetimeString(new Date(entryToEdit.endDate)));
       }
     }
   }, [entryToEdit]);
@@ -46,10 +42,9 @@ const EditTimeModal: React.FC<EditTimeModalProps> = ({ show, handleClose, entryT
     entryToEdit.end = new Date(entryToEdit.endDate);
     }
 
-    await updateTimeEntry(entryToEdit);
+    await updateEntry(entryToEdit);
     setActiveEntry(entryToEdit);
     handleClose();
-    await refreshEntries();
   };
 
   return (
