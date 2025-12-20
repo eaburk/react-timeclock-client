@@ -52,7 +52,7 @@ const EditCompaniesModal: React.FC<EditCompaniesModalProps> = ({ show, handleClo
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
-          Cancel
+          Close
         </Button>
       </Modal.Footer>
     </Modal>

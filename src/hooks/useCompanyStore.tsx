@@ -4,6 +4,16 @@ import type { CompanyStore, Company } from '../types';
 
 export const useCompanyStore = create<CompanyStore>((set, get) => ({
   companies: [],
+  activeCompany: null,
+
+  setActiveCompany: async (company: Company) => {
+    set(state => {
+      const newCompany = state.companies.find(c => c.id == company.id);
+      return {
+        activeCompany: newCompany
+      }
+    });
+  },
 
   createNewCompany: async (company: Company) => {
     try {

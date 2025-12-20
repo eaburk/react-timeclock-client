@@ -101,22 +101,15 @@ button.normal:focus {
   justify-content: center;
 }
 
-.record-time-container form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
 .record-time-div {
-  display: grid;
-  grid-template-columns: 120px 240px 40px;
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
 }
 
 .record-time-div button {
-  width: 100%;
+  width: 100px;
 }
 
 .record-time-div input {
@@ -161,4 +154,15 @@ button:disabled {
   border-radius: 3px;
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
   padding: 10px;
+}
+
+.active-entry {
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  height: 75px;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 20px;
+  color: #3CB371;
 }

@@ -10,10 +10,13 @@ type EditTimeModalProps = {
 };
 
 const EditTimeModal: React.FC<EditTimeModalProps> = ({ show, handleClose, entryToEdit }) => {
+  if(!entryToEdit) return null;
+
   const updateEntry = useTimeStore(state => state.updateEntry);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const setActiveEntry = useTimeStore((state) => state.setActiveEntry);
+  const activeEntry = useTimeStore(state => state.activeEntry);
 
   const getLocalDatetimeString = (curDate: Date) => {
     const now = curDate;
@@ -27,6 +30,8 @@ const EditTimeModal: React.FC<EditTimeModalProps> = ({ show, handleClose, entryT
       setStartTime(getLocalDatetimeString(new Date(entryToEdit.startDate)));
       if(entryToEdit.endDate !== "") {
         setEndTime(getLocalDatetimeString(new Date(entryToEdit.endDate)));
+      } else {
+        setEndTime('');
       }
     }
   }, [entryToEdit]);
@@ -43,7 +48,8 @@ const EditTimeModal: React.FC<EditTimeModalProps> = ({ show, handleClose, entryT
     }
 
     await updateEntry(entryToEdit);
-    setActiveEntry(entryToEdit);
+    if(entryToEdit.id === activeEntry?.id)
+      setActiveEntry(entryToEdit);
     handleClose();
   };
 
@@ -67,7 +73,7 @@ const EditTimeModal: React.FC<EditTimeModalProps> = ({ show, handleClose, entryT
             <Form.Label>Clock Out</Form.Label>
             <Form.Control
               type="datetime-local"
-              value={endTime}
+              value={endTime || ''}
               onChange={(e) => setEndTime(e.target.value)}
             />
             <Form.Text className="text-muted">

@@ -4,13 +4,14 @@ import { TotalTime } from "../components";
 import "react-datepicker/dist/react-datepicker.css";
 import type { DateNull } from "../types";
 import '../App.css';
-import { useTimeStore } from '../hooks';
+import { useTimeStore, useCompanyStore } from '../hooks';
 import { startOfWeek, endOfWeek } from "date-fns";
 
 
 const CalendarPanel = () => {
   const [dateRange, setDateRange] = useState<DateNull>({start: new Date(), end: new Date()});
   const refreshTimeEntries = useTimeStore((state) => state.refreshEntries);
+  const activeCompany = useCompanyStore(state => state.activeCompany);
 
   const handleChange = (dates: [DateNull, DateNull]) => {
     const [start, end] = dates;
@@ -34,8 +35,9 @@ const CalendarPanel = () => {
   };
 
   useEffect(() => {
-    refreshTimeEntries(dateRange.start, dateRange.end);
-  }, [dateRange]);
+    if(activeCompany)
+      refreshTimeEntries({ newStart: dateRange.start, newEnd: dateRange.end, company: activeCompany });
+  }, [dateRange, activeCompany]);
 
   return (
     <div className="calendar-panel-container">

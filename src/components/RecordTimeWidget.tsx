@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import '../App.css';
-import { useTimeStore } from '../hooks';
+import { useTimeStore, useCompanyStore } from '../hooks';
 
 const RecordTimeWidget = () => {
   const [clockOutTime, setClockOutTime] = useState<string>('');
@@ -10,6 +10,7 @@ const RecordTimeWidget = () => {
   const createEntry = useTimeStore(state => state.createEntry);
   const updateEntry = useTimeStore(state => state.updateEntry);
   const deleteEntry = useTimeStore(state => state.deleteEntry);
+  const activeCompany = useCompanyStore(state => state.activeCompany);
 
   function formatLocalDateTime(date) {
     if(!date) return '';
@@ -38,13 +39,14 @@ const RecordTimeWidget = () => {
     const formData = new FormData();
     formData.set('endDate', '');
     formData.set('startDate', newNow);
+    formData.set('companyId', activeCompany.id);
 
     const newEntry = await createEntry(Object.fromEntries(formData.entries()));
 
     await setActiveEntry(newEntry);
     setClockOutTime('');
 
-    await refreshTimeEntries();
+    await refreshTimeEntries({ company: activeCompany });
   }
 
   const handleClockOut = async () => {
@@ -68,17 +70,18 @@ const RecordTimeWidget = () => {
     formData.set('endDate', formatLocalDateTime(clockOutDate));
 
     await updateEntry(Object.fromEntries(formData.entries()));
-    await refreshTimeEntries();
+    await refreshTimeEntries({ company: activeCompany });
     await setClockOutTime('');
   }
 
   const handleCancel = async () => {
     if(confirm('Also delete this entry?')) {
       await deleteEntry(activeEntry.id);
-      await refreshTimeEntries();
+      await refreshTimeEntries({ company: activeCompany });
     }
     await setActiveEntry(null);
   }
+
 
   return (
     <div className="record-time-container">
@@ -87,18 +90,25 @@ const RecordTimeWidget = () => {
           <button type="button" disabled={activeEntry !== null} className="btn btn-primary" onClick={handleClockIn}>
             Clock In
           </button>
-
-          <input className='form-input' type="datetime-local" name="startDate" disabled value={formatLocalDateTime(activeEntry?.start) ?? ''} onChange={event => handleClockInChange(event)} />
-         </div>
-        <div className="record-time-div">
           <button type="button" disabled={activeEntry === null} className="btn btn-secondary" onClick={handleClockOut}>
             Clock Out
           </button>
-
-          <input type="datetime-local" name="endDate" disabled value={clockOutTime} onChange={event => setClockOutTime(event.target.value)} />
-
-          {activeEntry && <button type="button" className="link-button" onClick={handleCancel}>Cancel</button>}
-
+        </div>
+        <div className="active-entry">
+        {activeEntry && (
+          <>
+            In Progress:{' '}
+            {activeEntry.start.toLocaleString('en-US', {
+              month: '2-digit',
+              day: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: true,
+            })}
+            <button type="button" className="link-button ms-3" onClick={handleCancel}>Cancel</button>
+          </>
+        )}
         </div>
       </form>
     </div>

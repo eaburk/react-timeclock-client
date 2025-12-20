@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import '../App.css';
-import { useTimeStore, useNow } from '../hooks';
+import { useTimeStore, useNow, useCompanyStore } from '../hooks';
 import type { TimeEntry } from '../types';
 import EditTimeModal from './EditTimeModal';
 
@@ -12,6 +12,7 @@ const EntryList = () => {
   const [selectedEntry, setSelectedEntry] = useState<TimeEntry | null>(null);
   const setActiveEntry = useTimeStore((state) => state.setActiveEntry);
   const activeEntry = useTimeStore((state) => state.activeEntry);
+  const activeCompany = useCompanyStore(state => state.activeCompany);
 
   const now = useNow(1000);
   let currentSessionMinutes = 0;
@@ -28,10 +29,14 @@ const EntryList = () => {
   }
 
   useEffect(() => {
-    refreshTimeEntries();
-  }, [])
+    if(activeCompany) {
+      refreshTimeEntries({ company: activeCompany });
+    }
+  }, [activeCompany])
 
   const getTotalTime = (timeEntry: TimeEntry) => {
+    if(timeEntry.end === '' || !timeEntry.end) return;
+
     let difference = Math.abs(timeEntry.end.getTime() - timeEntry.start.getTime());
     let totalMinutes = Math.floor(difference / (1000 * 60));
 

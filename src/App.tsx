@@ -9,7 +9,9 @@ function App() {
     <div className="spa-container">
       <div className="main-content-panel">
         <MainContentPanel />
-        <ProgressWidget />
+        <div className="mt-3">
+          <ProgressWidget />
+        </div>
       </div>
       <div className="sidebar-panel">
         <CalendarPanel />

@@ -48,7 +48,7 @@ export const deleteCompany = async (payload: any): Promise<any> => {
   return response.json();
 };
 
-export const fetchTimeEntries = async (startDate: Date, endDate: Date, company: Number | null): Promise<TimeEntry[]> => {
+export const fetchTimeEntries = async (startDate: Date, endDate: Date, companyId: Number | null): Promise<TimeEntry[]> => {
   if(!startDate || !endDate) {
     return [];
   }
@@ -57,7 +57,7 @@ export const fetchTimeEntries = async (startDate: Date, endDate: Date, company: 
   const newEndDate = toYYMMDDLocal(new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 1));
 
 
-  const response = await fetch(`${API_BASE_URL}/time-entries?startDate=${newStartDate}&endDate=${newEndDate}&company=${company}`);
+  const response = await fetch(`${API_BASE_URL}/time-entries?startDate=${newStartDate}&endDate=${newEndDate}&companyId=${companyId}`);
 
   if (!response.ok) throw new Error('Failed to fetch time entries');
 
@@ -118,7 +118,7 @@ export const updateTimeEntry = async (payload: any): Promise<TimeEntry> => {
   return {
     ...updatedEntry,
     start: new Date(updatedEntry.startDate),
-    end: '',
+    end: updatedEntry.endDate !== "" ? new Date(updatedEntry.endDate) : '',
   }
 };
 

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { fetchTimeEntries, deleteTimeEntry, updateTimeEntry, saveTimeEntry } from '../services';
-import type { TimeStore, DateNull, TimeEntry } from '../types';
+import type { TimeStore, DateNull, TimeEntry, Company } from '../types';
 
 export const useTimeStore = create<TimeStore>((set, get) => ({
   entries: [],
@@ -9,12 +9,6 @@ export const useTimeStore = create<TimeStore>((set, get) => ({
   filterEnd: new Date(),
 
   setActiveEntry: async (timeEntry: TimeEntry | null) => {
-    if(timeEntry && timeEntry.end) {
-      timeEntry.durationMinutes =
-        timeEntry.end
-          ? Math.floor((timeEntry.end.getTime() - timeEntry.start.getTime()) / 60000)
-          : 0;
-    }
     set({activeEntry: timeEntry});
   },
 
@@ -37,7 +31,7 @@ export const useTimeStore = create<TimeStore>((set, get) => ({
 
       set((state) => {
         const updatedEntries = state.entries.map(e => {
-          if(e.id == data.id) {
+          if(e.id === data.id) {
             return data;
           } else {
             return e;
@@ -53,30 +47,17 @@ export const useTimeStore = create<TimeStore>((set, get) => ({
     }
   },
 
-  refreshEntries: async (newStart?: Date, newEnd?: Date): Promise<void> => {
+  refreshEntries: async ({ newStart, newEnd, company }: { newStart?: Date, newEnd?: Date, company: Company}): Promise<void> => {
+    if(!company) return;
+
     const start = newStart ?? get().filterStart;
     const end = newEnd ?? get().filterEnd;
 
     try {
-      const entries = await fetchTimeEntries(start, end, 1);
-
-      const mappedData = entries.map((entry) => {
-        const clockIn = new Date(entry.startDate);
-        const clockOut = entry.endDate ? new Date(entry.endDate) : null;
-
-        const durationMinutes =
-          clockOut
-            ? Math.floor((clockOut.getTime() - clockIn.getTime()) / 60000)
-            : 0;
-
-        return {
-          ...entry,
-          durationMinutes,
-        }
-      });
+      const entries = await fetchTimeEntries(start, end, company.id);
 
       set({
-        entries: mappedData,
+        entries: entries,
         filterStart: start,
         filterEnd: end,
       });
