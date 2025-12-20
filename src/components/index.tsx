@@ -13,3 +13,5 @@ export { default as ProgressWidget } from './ProgressWidget';
 export { default as RecordTimeWidget } from './RecordTimeWidget';
 
 export { default as TotalTime }  from './TotalTime';
+
+export { default as EditCompaniesModal }  from './EditCompaniesModal';

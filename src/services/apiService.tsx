@@ -10,8 +10,42 @@ export const fetchCompanies = async (): Promise<Company[]> => {
 
   const data = await response.json();
 
-  // Convert date strings from the database into real Date objects
   return data;
+};
+
+export const createCompany = async (payload: any): Promise<Company> => {
+  const response = await fetch(`${API_BASE_URL}/companies`, {
+    method: 'POST',
+    headers: {
+     'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) throw new Error('Failed to save time entries');
+
+  const createdEntry = await response.json();
+
+  return {
+    ...createdEntry,
+    start: new Date(createdEntry.startDate),
+    end: '',
+  }
+
+}
+
+export const deleteCompany = async (payload: any): Promise<any> => {
+  const response = await fetch(`${API_BASE_URL}/companies`, {
+    method: 'DELETE',
+    headers: {
+     'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({id: payload})
+  });
+
+  if (!response.ok) throw new Error('Failed to delete time entry');
+
+  return response.json();
 };
 
 export const fetchTimeEntries = async (startDate: Date, endDate: Date, company: Number | null): Promise<TimeEntry[]> => {

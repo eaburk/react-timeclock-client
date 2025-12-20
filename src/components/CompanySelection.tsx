@@ -1,20 +1,22 @@
 import { useState, useEffect } from "react";
 import type { Company } from "../types";
 import '../App.css';
-import { fetchCompanies } from "../services";
+import { EditCompaniesModal } from "../components";
+import { useCompanyStore } from '../hooks';
 
 const CompanySelection = () => {
-  const [companies, setCompanies] = useState<Company[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const refreshCompanies = useCompanyStore(state => state.refreshCompanies);
+  const companies = useCompanyStore(state => state.companies);
+
 
   useEffect(() => {
-    fetchCompanies()
-      .then(data => {
-        setCompanies(data);
-      })
-      .catch(error => {
-        console.log("Error fetching companies:", error);
-      });
+    refreshCompanies();
   }, []);
+
+  const handleEditCompanies = () => {
+    setShowModal(true);
+  }
 
   return (
     <div className='company-selection-container'>
@@ -31,8 +33,12 @@ const CompanySelection = () => {
         </select>
       </div>
       <div>
-        <button id="btnEditCompanies" className='normal'>📝</button>
+        <button id="btnEditCompanies" className='normal' onClick={handleEditCompanies}>📝</button>
       </div>
+      <EditCompaniesModal
+        show={showModal}
+        handleClose={() => setShowModal(false)}
+      />
     </div>
   );
 }

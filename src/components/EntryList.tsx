@@ -77,8 +77,8 @@ const EntryList = () => {
           {timeEntries.map(timeEntry => (
             <tr key={timeEntry.id}>
               <td>
-                <button type="button" onClick={() => handleEditEntry(timeEntry)} className="normal mx-2">📝</button>
-                <button type="button" onClick={() => handleDeleteEntry(timeEntry)} className="normal mx-2">❌</button>
+                <button title="Edit Entry" type="button" onClick={() => handleEditEntry(timeEntry)} className="normal mx-2">📝</button>
+                <button title="Delete Entry" type="button" onClick={() => handleDeleteEntry(timeEntry)} className="normal mx-2">❌</button>
               </td>
               <td>
                 {timeEntry.start.toLocaleDateString()}
