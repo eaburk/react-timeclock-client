@@ -74,6 +74,9 @@ export const saveTimeEntry = async (payload: any): Promise<TimeEntry> => {
   payload.startDate = new Date(payload.startDate.replace(" ", "T"));
   payload.endDate = payload.endDate ? new Date(payload.endDate.replace(" ", "T")) : "";
 
+  payload.startDate = `${payload.startDate.toISOString().replace(" ", "T")}`;
+  payload.endDate = payload.endDate !== "" ? `${payload.endDate.toISOString().replace(" ", "T")}` : "";
+
   const response = await fetch(`${API_BASE_URL}/time-entries`, {
     method: 'POST',
     headers: {
@@ -94,6 +97,12 @@ export const saveTimeEntry = async (payload: any): Promise<TimeEntry> => {
 };
 
 export const updateTimeEntry = async (payload: any): Promise<TimeEntry> => {
+  payload.startDate = new Date(payload.startDate.replace(" ", "T"));
+  payload.endDate = payload.endDate ? new Date(payload.endDate.replace(" ", "T")) : "";
+
+  payload.startDate = `${payload.startDate.toISOString().replace(" ", "T")}`;
+  payload.endDate = payload.endDate !== "" ? `${payload.endDate.toISOString().replace(" ", "T")}` : "";
+
   const response = await fetch(`${API_BASE_URL}/time-entries/${payload.id}`, {
     method: 'PATCH',
     headers: {

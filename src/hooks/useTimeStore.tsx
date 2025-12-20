@@ -9,10 +9,10 @@ export const useTimeStore = create<TimeStore>((set, get) => ({
   filterEnd: new Date(),
 
   setActiveEntry: async (timeEntry: TimeEntry | null) => {
-    if(timeEntry && timeEntry.endDate) {
+    if(timeEntry && timeEntry.end) {
       timeEntry.durationMinutes =
-        timeEntry.endDate
-          ? Math.floor((timeEntry.endDate.getTime() - timeEntry.startTime.getTime()) / 60000)
+        timeEntry.end
+          ? Math.floor((timeEntry.end.getTime() - timeEntry.start.getTime()) / 60000)
           : 0;
     }
     set({activeEntry: timeEntry});
@@ -37,7 +37,7 @@ export const useTimeStore = create<TimeStore>((set, get) => ({
 
       set((state) => {
         const updatedEntries = state.entries.map(e => {
-          if(e.id === data.id) {
+          if(e.id == data.id) {
             return data;
           } else {
             return e;

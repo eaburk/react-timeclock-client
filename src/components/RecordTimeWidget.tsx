@@ -58,7 +58,7 @@ const RecordTimeWidget = () => {
       second: '2-digit',
       hour12: false
     }).replace(',', '');
-    setClockOutTime(clockOutTime);
+    await setClockOutTime(clockOutTime);
 
     await setActiveEntry(null);
 
@@ -69,6 +69,7 @@ const RecordTimeWidget = () => {
 
     await updateEntry(Object.fromEntries(formData.entries()));
     await refreshTimeEntries();
+    await setClockOutTime('');
   }
 
   const handleCancel = async () => {
