@@ -9,7 +9,7 @@ export const useTimeStore = create<TimeStore>((set, get) => ({
   filterEnd: new Date(),
 
   setActiveEntry: async (timeEntry: TimeEntry | null) => {
-    if(timeEntry) {
+    if(timeEntry && timeEntry.endDate) {
       timeEntry.durationMinutes =
         timeEntry.endDate
           ? Math.floor((timeEntry.endDate.getTime() - timeEntry.startTime.getTime()) / 60000)

@@ -47,7 +47,7 @@ const EntryList = () => {
   };
 
   const handleDeleteEntry = async (timeEntry: TimeEntry) => {
-    if(timeEntry.endDate === "") {
+    if(timeEntry.endDate === "" && activeEntry.id === timeEntry.id) {
       confirm("You can't delete an in progress entry");
       return;
     }
