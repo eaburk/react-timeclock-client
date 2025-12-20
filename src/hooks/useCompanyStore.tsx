@@ -11,7 +11,7 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
 
       set((state) => ({
         companies: [...state.companies, data],
-      }))
+      }));
     } catch (error) {
       console.error('Error creating company', error);
     }
@@ -19,11 +19,11 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
 
   refreshCompanies: async (): Promise<void> => {
     try {
-      const data = await fetchCompanies();
+      const companies = await fetchCompanies();
 
       set({
-        companies: data
-      })
+        companies: companies
+      });
     } catch (error) {
       console.error('Error fetching companies', error);
     }
@@ -35,7 +35,7 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
 
       set((state) => ({
         companies: state.companies.filter((e) => e.id !== companyId),
-      }))
+      }));
     } catch (error) {
       console.error('Error deleting company', error);
     }
