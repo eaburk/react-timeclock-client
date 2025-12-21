@@ -3,8 +3,10 @@ import { useTimeStore } from '../hooks';
 import { useNow } from '../hooks';
 import { isSameDay } from '../utilities';
 
-const EIGHT_HOURS_MINUTES = 8 * 60
-function ProgressWidget() {
+function ProgressWidget({ basedHours }) {
+  const overallHours = basedHours * 60;
+
+    
   const activeEntry = useTimeStore((state) => state.activeEntry);
   const currentClockIn = activeEntry ? new Date(activeEntry?.startDate) : null;
   const timeEntries = useTimeStore((state) => state.entries);
@@ -35,7 +37,7 @@ function ProgressWidget() {
   );
 
   const progress = Math.min(
-    (minutesWorked / EIGHT_HOURS_MINUTES) * 100,
+    (minutesWorked / overallHours) * 100,
     100
   );
 
