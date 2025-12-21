@@ -10,8 +10,6 @@ type EditTimeModalProps = {
 };
 
 const EditTimeModal: React.FC<EditTimeModalProps> = ({ show, handleClose, entryToEdit }) => {
-  if(!entryToEdit) return null;
-
   const updateEntry = useTimeStore(state => state.updateEntry);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
@@ -48,8 +46,9 @@ const EditTimeModal: React.FC<EditTimeModalProps> = ({ show, handleClose, entryT
     }
 
     await updateEntry(entryToEdit);
-    if(entryToEdit.id === activeEntry?.id)
+    if(entryToEdit.id === activeEntry?.id) {
       setActiveEntry(entryToEdit);
+    }
     handleClose();
   };
 

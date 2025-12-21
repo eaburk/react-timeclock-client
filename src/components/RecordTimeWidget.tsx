@@ -4,7 +4,6 @@ import { useTimeStore, useCompanyStore } from '../hooks';
 
 const RecordTimeWidget = () => {
   const [clockOutTime, setClockOutTime] = useState<string>('');
-  const refreshTimeEntries = useTimeStore((state) => state.refreshEntries);
   const setActiveEntry = useTimeStore((state) => state.setActiveEntry);
   const activeEntry = useTimeStore((state) => state.activeEntry);
   const createEntry = useTimeStore(state => state.createEntry);
@@ -43,10 +42,8 @@ const RecordTimeWidget = () => {
 
     const newEntry = await createEntry(Object.fromEntries(formData.entries()));
 
-    await setActiveEntry(newEntry);
+    setActiveEntry(newEntry);
     setClockOutTime('');
-
-    await refreshTimeEntries({ company: activeCompany });
   }
 
   const handleClockOut = async () => {
@@ -62,24 +59,21 @@ const RecordTimeWidget = () => {
     }).replace(',', '');
     await setClockOutTime(clockOutTime);
 
-    await setActiveEntry(null);
-
     const formData = new FormData();
     formData.set('id', activeEntry.id);
     formData.set('startDate', formatLocalDateTime(activeEntry.start));
     formData.set('endDate', formatLocalDateTime(clockOutDate));
 
-    await updateEntry(Object.fromEntries(formData.entries()));
-    await refreshTimeEntries({ company: activeCompany });
-    await setClockOutTime('');
+    updateEntry(Object.fromEntries(formData.entries()));
+    setClockOutTime('');
+    setActiveEntry(null);
   }
 
   const handleCancel = async () => {
     if(confirm('Also delete this entry?')) {
-      await deleteEntry(activeEntry.id);
-      await refreshTimeEntries({ company: activeCompany });
+      deleteEntry(activeEntry.id);
     }
-    await setActiveEntry(null);
+    setActiveEntry(null);
   }
 
 

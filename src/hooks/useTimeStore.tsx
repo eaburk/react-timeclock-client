@@ -1,9 +1,11 @@
 import { create } from 'zustand';
 import { fetchTimeEntries, deleteTimeEntry, updateTimeEntry, saveTimeEntry } from '../services';
 import type { TimeStore, DateNull, TimeEntry, Company } from '../types';
+import { useCompanyStore } from '../hooks';
 
 export const useTimeStore = create<TimeStore>((set, get) => ({
   entries: [],
+  weekEntries: [],
   activeEntry: null,
   filterStart: new Date(),
   filterEnd: new Date(),
@@ -16,10 +18,10 @@ export const useTimeStore = create<TimeStore>((set, get) => ({
   createEntry: async (payload: any) => {
     try {
       const entry = await saveTimeEntry(payload);
+      const activeCompany = useCompanyStore.getState().activeCompany;
 
-      set((state) => ({
-        entries: [...state.entries, entry],
-      }))
+      await get().refreshEntries({ company: activeCompany });
+      return entry;
     } catch (error) {
       console.error('Error creating time entry:', error);
     }
@@ -28,20 +30,9 @@ export const useTimeStore = create<TimeStore>((set, get) => ({
   updateEntry: async (payload: any) => {
     try {
       const data = await updateTimeEntry(payload);
+      const activeCompany = useCompanyStore.getState().activeCompany;
 
-      set((state) => {
-        const updatedEntries = state.entries.map(e => {
-          if(e.id === data.id) {
-            return data;
-          } else {
-            return e;
-          }
-        });
-
-        return {
-          entries: updatedEntries,
-        }
-      })
+      await get().refreshEntries({ company: activeCompany });
     } catch (error) {
       console.error('Error updating time entry:', error);
     }
@@ -61,33 +52,44 @@ export const useTimeStore = create<TimeStore>((set, get) => ({
         filterStart: start,
         filterEnd: end,
       });
+      await get().refreshWeekEntries({ company });
+    } catch (error) {
+      console.error('Error fetching time entries:', error);
+    }
+  },
+
+  refreshWeekEntries: async ({ company }: { company: Company }): Promise<void> => {
+    if(!company) return;
+
+    const today = new Date();
+
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay());
+
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6); // Add 6 days to Sunday
+
+    const start = startOfWeek;
+    const end = endOfWeek;
+
+    try {
+      const entries = await fetchTimeEntries(start, end, company.id);
+
+      set({
+        weekEntries: entries,
+      });
     } catch (error) {
       console.error('Error fetching time entries:', error);
     }
   },
 
   deleteEntry: async (entryId: number): Promise<void> => {
+    const activeCompany = useCompanyStore.getState().activeCompany;
     try {
       await deleteTimeEntry(entryId);
-
-      set((state) => ({
-        entries: state.entries.filter((e) => e.id !== entryId),
-      }));
+      await get().refreshEntries({ company: activeCompany });
     } catch (error) {
       console.error('Error deleting time entry:', error);
     }
   },
-
-  createEntry: async (entry: TimeEntry): Promise<void> => {
-    try {
-      const data = await saveTimeEntry(entry);
-
-      set((state) => ({
-        entries: [...state.entries, data],
-      }));
-      return data;
-    } catch (error) {
-      console.error('Error creating entry', error);
-    }
-  }
 }));

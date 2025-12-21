@@ -3,30 +3,15 @@ import { useTimeStore } from '../hooks';
 import { useNow } from '../hooks';
 import { isSameDay } from '../utilities';
 
-function ProgressWidget({ basedHours, label }) {
+function ProgressWidget({ basedHours, label, entries }) {
   const overallHours = basedHours * 60;
-
-    
   const activeEntry = useTimeStore((state) => state.activeEntry);
   const currentClockIn = activeEntry ? new Date(activeEntry?.startDate) : null;
-  const timeEntries = useTimeStore((state) => state.entries);
   const now = useNow(1000);
 
-
   const today = new Date();
-
-  const completedMinutesToday = timeEntries
-    .filter(entry =>
-      entry.startDate &&
-      entry.startDate &&
-      entry.endDate !== "" &&
-      isSameDay(entry.start, today)
-    )
-    .reduce((total, entry) => {
-      const minutes =
-        (entry.end.getTime() - entry.start.getTime()) / 60000;
-      return total + minutes;
-    }, 0);
+  const completedMinutesToday = 
+    entries.reduce( (total, { durationMinutes }) => total + durationMinutes, 0);
 
   const currentSessionMinutes = currentClockIn
     ? Math.max(0, (now - currentClockIn.getTime()) / 60000)
