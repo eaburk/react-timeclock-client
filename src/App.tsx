@@ -10,8 +10,8 @@ function App() {
       <div className="main-content-panel">
         <MainContentPanel />
         <div className="mt-3">
-          <ProgressWidget basedHours={8} />
-          <ProgressWidget basedHours={40} />
+          <ProgressWidget label={"Today's"} basedHours={8} />
+          <ProgressWidget label={"Week's"} basedHours={40} />
         </div>
       </div>
       <div className="sidebar-panel">

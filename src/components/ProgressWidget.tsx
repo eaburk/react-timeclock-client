@@ -3,7 +3,7 @@ import { useTimeStore } from '../hooks';
 import { useNow } from '../hooks';
 import { isSameDay } from '../utilities';
 
-function ProgressWidget({ basedHours }) {
+function ProgressWidget({ basedHours, label }) {
   const overallHours = basedHours * 60;
 
     
@@ -52,7 +52,7 @@ function ProgressWidget({ basedHours }) {
     <div className="progress-widget-container">
       <div className="progress-wrapper">
         <div className="label">
-          Today's Progress: {hours}h {minutes}m of 8h
+          {label} Progress: {hours}h {minutes}m of {basedHours}h
         </div>
 
         <div className="bar">
