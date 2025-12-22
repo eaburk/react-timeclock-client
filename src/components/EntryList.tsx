@@ -92,7 +92,7 @@ const EntryList = () => {
           </tr>
         </thead>
         <tbody>
-          {timeEntries.length === 0 && <tr><td colSpan={5}>No Entries</td></tr>}
+          {timeEntries.length === 0 && <tr><td colSpan={6}>No Entries</td></tr>}
           {timeEntries.map(timeEntry => (
             <tr key={timeEntry.id}>
               <td>
