@@ -54,9 +54,9 @@
   min-width: 600px;
 }
 
-.time-entry-line-container>div:nth-child(odd) {
-  background: #dcdcdc;
-}
+/*.time-entry-line-container>div:nth-child(odd) {*/
+  /*background: #dcdcdc;*/
+/*}*/
 
 .time-entry-line-container {
   height: 300px;

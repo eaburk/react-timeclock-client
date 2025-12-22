@@ -13,6 +13,7 @@ const EntryList = () => {
   const setActiveEntry = useTimeStore((state) => state.setActiveEntry);
   const activeEntry = useTimeStore((state) => state.activeEntry);
   const activeCompany = useCompanyStore(state => state.activeCompany);
+  const updateEntry = useTimeStore(state => state.updateEntry);
 
   const now = useNow(1000);
   let currentSessionMinutes = 0;
@@ -65,12 +66,25 @@ const EntryList = () => {
     setActiveEntry(timeEntry);
   }
 
+  const handleChangeBilled = async (event, timeEntry) => {
+    const payload = { id: timeEntry.id, startDate: timeEntry.startDate, endDate: timeEntry.endDate, billed: event.currentTarget.checked ? "1" : "0" }
+    await updateEntry(payload);
+  }
+
+  const handleSelectAll = (event) => {
+    timeEntries.forEach(timeEntry => {
+      const payload = { id: timeEntry.id, startDate: timeEntry.startDate, endDate: timeEntry.endDate, billed: event.currentTarget.checked ? "1" : "0" }
+      updateEntry(payload);
+    });
+  }
+
   return (
     <div className="time-entry-line-container">
       <table className="time-entries-table" style={{width: "100%"}}>
         <thead>
           <tr>
             <th></th>
+            <th>Billed<br /><input type="checkbox" onChange={handleSelectAll} checked={ timeEntries.every(e => e.billed === 1) } title="Select All" /></th>
             <th>Date</th>
             <th>Time In</th>
             <th>Time Out</th>
@@ -84,6 +98,9 @@ const EntryList = () => {
               <td>
                 <button title="Edit Entry" type="button" onClick={() => handleEditEntry(timeEntry)} className="normal mx-2">📝</button>
                 <button title="Delete Entry" type="button" onClick={() => handleDeleteEntry(timeEntry)} className="normal mx-2">❌</button>
+              </td>
+              <td>
+                <input type="checkbox" onChange={(event) => handleChangeBilled(event, timeEntry)} checked={timeEntry.billed === 1} />
               </td>
               <td>
                 {timeEntry.start.toLocaleDateString()}
