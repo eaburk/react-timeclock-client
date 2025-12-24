@@ -71,20 +71,25 @@ const EntryList = () => {
     await updateEntry(payload);
   }
 
-  const handleSelectAll = (event) => {
+  const allBilled = timeEntries.every(e => (e.billed == "1"));
+  const handleBillAll = () => {
     timeEntries.forEach(timeEntry => {
-      const payload = { id: timeEntry.id, startDate: timeEntry.startDate, endDate: timeEntry.endDate, billed: event.currentTarget.checked ? "1" : "0" }
+      const payload = { id: timeEntry.id, startDate: timeEntry.startDate, endDate: timeEntry.endDate, billed: allBilled ? "0" : "1" }
       updateEntry(payload);
     });
   }
 
+
   return (
     <div className="time-entry-line-container">
+      <div className="float-start ms-3">
+        <button type="button" onClick={handleBillAll} className="btn btn-success">{allBilled ? "Unbill" : "Bill"}</button>
+      </div>
       <table className="time-entries-table" style={{width: "100%"}}>
         <thead>
           <tr>
             <th></th>
-            <th>Billed<br /><input type="checkbox" onChange={handleSelectAll} checked={ timeEntries.every(e => e.billed === 1) } title="Select All" /></th>
+            <th>Billed</th>
             <th>Date</th>
             <th>Time In</th>
             <th>Time Out</th>

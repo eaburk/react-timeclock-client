@@ -88,19 +88,27 @@ const RecordTimeWidget = () => {
             Clock Out
           </button>
         </div>
-        <div className="active-entry">
+        <div className="active-entry mt-3">
         {activeEntry && (
           <>
-            In Progress:{' '}
-            {activeEntry.start.toLocaleString('en-US', {
-              month: '2-digit',
-              day: '2-digit',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: true,
-            })}
-            <button type="button" className="link-button ms-3" onClick={handleCancel}>Cancel</button>
+            <div className="active-entry-container">
+              <div>
+                You are clocked in since: {activeEntry.start.toLocaleString('en-US', {hour: '2-digit', minute: '2-digit'})}
+              </div>
+              <div>
+              {activeEntry.start.toLocaleString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+              })}
+              </div>
+              <div>
+                <button type="button" className="btn btn-success ms-3 mt-3" onClick={handleCancel}>Cancel</button>
+              </div>
+            </div>
           </>
         )}
         </div>

@@ -1,5 +1,4 @@
 import type { TimeEntry } from './';
-import type { DateNull } from './';
 
 export interface TimeStore {
   entries: TimeEntry[];
@@ -9,4 +8,5 @@ export interface TimeStore {
   refreshEntries: (newStart?: Date, newEnd?: Date) => Promise<void>;
   deleteEntry: (entryId: number) => Promise<void>;
   setActiveEntry: (entry: TimeEntry | null) => Promise<void>;
+  updateEntry: (entry: TimeEntry | null) => Promise<void>;
 }
