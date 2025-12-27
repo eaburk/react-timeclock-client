@@ -82,10 +82,11 @@ const EntryList = () => {
 
   return (
     <div className="time-entry-line-container">
+      <div className="time-entry-title">Time Entries</div>
       <div className="float-start ms-3">
         <button type="button" onClick={handleBillAll} className="btn btn-success">{allBilled ? "Unbill" : "Bill"}</button>
       </div>
-      <table className="time-entries-table" style={{width: "100%"}}>
+      <table className="table table-striped" style={{width: "100%"}}>
         <thead>
           <tr>
             <th></th>

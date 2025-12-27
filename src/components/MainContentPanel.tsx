@@ -18,22 +18,20 @@ const MainContentPanel = () => {
     );
 
   return (
-    <div className="main-content-container">
-      <div className="main-content-inner-container">
-        <div>
-          <CompanySelection />
+      <div className="main-content-container">
+        <CompanySelection />
+        <div className="progress-bars-container">
+          <ProgressWidget label={"Today's"} basedHours={8} entries={todayEntries} />
+          <ProgressWidget label={"Week's"} basedHours={40} entries={weekEntries} />
+        </div>
+        <div className="top-content-container">
           <RecordTimeWidget />
+          <div>
+            <CalendarPanel />
+          </div>
         </div>
-        <div>
-          <CalendarPanel />
-        </div>
+        <EntryList />
       </div>
-      <div className="mt-3 p-2">
-          <EntryList />
-        <ProgressWidget label={"Today's"} basedHours={8} entries={todayEntries} />
-        <ProgressWidget label={"Week's"} basedHours={40} entries={weekEntries} />
-      </div>
-    </div>
   );
 }
 

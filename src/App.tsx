@@ -3,8 +3,6 @@
 import './App.css'
 import  { MainContentPanel } from './components';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useTimeStore } from './hooks';
-import { isSameDay } from './utilities';
 
 function App() {
   return (

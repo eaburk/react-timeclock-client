@@ -20,7 +20,7 @@ const CalendarPanel = () => {
 
   const selectFullWeek = () => {
     if (!dateRange.start) return;
-    
+
     const start = startOfWeek(dateRange.start, { weekStartsOn: 0 });
     const end = endOfWeek(dateRange.end || dateRange.start, { weekStartsOn: 0 });
 
@@ -41,6 +41,9 @@ const CalendarPanel = () => {
 
   return (
     <div className="calendar-panel-container">
+      <div className="select-date">
+        Select Date:
+      </div>
       <DatePicker
         selected={dateRange.start}
         onChange={handleChange}

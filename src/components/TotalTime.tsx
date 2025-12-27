@@ -5,13 +5,12 @@ const TotalTime = () => {
   const totalMinutes = useTimeStore((state) =>
      state.entries.reduce((sum, entry) => sum + entry.durationMinutes, 0)
    )
-   const entries = useTimeStore(state => state.entries);
-   
+
    const hours = Math.floor(totalMinutes / 60)
    const minutes = totalMinutes % 60
 
    return (
-     <div className="total-time">
+     <div className="total-time p-2">
        Selection Total: {hours}h {minutes}m
      </div>
    )
