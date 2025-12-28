@@ -4,11 +4,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import type { DateNull } from "../types";
 import '../App.css';
 import { useTimeStore, useCompanyStore } from '../hooks';
-import { startOfWeek, endOfWeek } from "date-fns";
 
 
 const CalendarPanel = () => {
-  const [dateRange, setDateRange] = useState<DateNull>({start: new Date(), end: new Date()});
+  const filterStart = useTimeStore((state) => (state.filterStart));
+  const filterEnd = useTimeStore((state) => (state.filterEnd));
+  const [dateRange, setDateRange] = useState<DateNull>({start: filterStart || new Date(), end: filterEnd || new Date()});
   const refreshTimeEntries = useTimeStore((state) => state.refreshEntries);
   const activeCompany = useCompanyStore(state => state.activeCompany);
 
@@ -17,31 +18,21 @@ const CalendarPanel = () => {
     setDateRange({start, end});
   };
 
-  const selectFullWeek = () => {
-    if (!dateRange.start) return;
-
-    const start = startOfWeek(dateRange.start, { weekStartsOn: 0 });
-    const end = endOfWeek(dateRange.end || dateRange.start, { weekStartsOn: 0 });
-
-    setDateRange({start, end});
-  };
-
-  const selectToday = () => {
-    const start = new Date();
-    const end = new Date();
-
-    setDateRange({start, end});
-  };
+  useEffect(() => {
+    if(activeCompany && dateRange.end) {
+      refreshTimeEntries({ newStart: dateRange.start, newEnd: dateRange.end, company: activeCompany });
+    }
+  }, [dateRange, activeCompany]);
 
   useEffect(() => {
-    if(activeCompany)
-      refreshTimeEntries({ newStart: dateRange.start, newEnd: dateRange.end, company: activeCompany });
-  }, [dateRange, activeCompany]);
+    console.log(filterStart, filterEnd)
+    setDateRange({start: filterStart, end: filterEnd});
+  }, [filterStart, filterEnd]);
 
   return (
     <div className="calendar-panel-container">
       <div className="select-date">
-        Select Date:
+        Filter Entries:
       </div>
       <DatePicker
         selected={dateRange.start}
@@ -51,14 +42,6 @@ const CalendarPanel = () => {
         inline
         selectsRange
       />
-      <div className="mb-2">
-        <button className="btn btn-secondary p-1 m-1" onClick={selectFullWeek}>
-          Week
-        </button>
-        <button className="btn btn-secondary p-1 m-1" onClick={selectToday}>
-          Today
-        </button>
-      </div>
     </div>
   );
 }

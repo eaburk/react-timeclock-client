@@ -4,6 +4,7 @@ import { useTimeStore, useNow, useCompanyStore, useActiveSessionTime } from '../
 import type { TimeEntry } from '../types';
 import { EditTimeModal, TotalTime } from '../components';
 import { formatMinutes } from '../utilities';
+import { startOfWeek, endOfWeek } from "date-fns";
 
 const EntryList = () => {
   const [showModal, setShowModal] = useState(false);
@@ -15,22 +16,10 @@ const EntryList = () => {
   const activeEntry = useTimeStore((state) => state.activeEntry);
   const activeCompany = useCompanyStore(state => state.activeCompany);
   const updateEntry = useTimeStore(state => state.updateEntry);
+  const filterStart = useTimeStore(state => state.filterStart)
+  const filterEnd = useTimeStore(state => state.filterEnd)
 
-  const now = useNow(1000);
-  let currentSessionMinutes = 0;
-  let hour = 0;
-  let minute = 0;
-  const currentClockIn = activeEntry ? new Date(activeEntry?.startDate) : null;
-
-  const { hours, minutes, totalMinutes } = useActiveSessionTime(activeEntry?.start ?? null);
-
-  if(activeEntry) {
-    currentSessionMinutes = currentClockIn
-      ? Math.max(0, (now - currentClockIn.getTime()) / 60000)
-      : 0;
-    hour = Math.floor(currentSessionMinutes / 60);
-    minute = Math.floor(currentSessionMinutes % 60);
-  }
+  const { totalMinutes } = useActiveSessionTime(activeEntry?.start ?? null);
 
   useEffect(() => {
     if(activeCompany) {
@@ -70,12 +59,47 @@ const EntryList = () => {
     });
   }
 
+  const selectFullWeek = () => {
+    if (!filterStart) return;
+
+    const start = startOfWeek(filterStart, { weekStartsOn: 0 });
+    const end = endOfWeek(filterEnd || filterStart, { weekStartsOn: 0 });
+
+    refreshTimeEntries({ newStart: start, newEnd: end, company: activeCompany });
+  };
+
+  const selectToday = () => {
+    const start = new Date();
+    const end = new Date();
+
+    refreshTimeEntries({ newStart: start, newEnd: end, company: activeCompany });
+  };
+
+  const isToday = () => {
+    return filterStart.toDateString() === (new Date()).toDateString()
+      && filterEnd.toDateString() === (new Date()).toDateString();
+  }
+
+  const isWeek = () => {
+    const start = startOfWeek(filterStart, { weekStartsOn: 0 });
+    const end = endOfWeek(filterEnd || filterStart, { weekStartsOn: 0 });
+    return filterStart.toDateString() === start.toDateString() && filterEnd.toDateString() === end.toDateString();
+  }
 
   return (
     <div className="time-entry-line-container">
       <div className="time-entry-title">Time Entries</div>
       <div className="entry-list-action-bar">
-        <button type="button" onClick={handleBillAll} className="btn btn-success">{allBilled ? "Unbill" : "Bill"}</button>
+        <div className="mb-2">
+          <button type="button" onClick={handleBillAll} className="btn btn-secondary me-5">Toggle Billed</button>
+          Filters:
+          <button className={`btn btn-outline-success m-1 p-1 ${isWeek() ? " active" : ""}`} onClick={selectFullWeek}>
+            Week
+          </button>
+          <button className={`btn btn-outline-success m-1 p-1 ${isToday() ? " active" : ""}`} onClick={selectToday}>
+            Today
+          </button>
+        </div>
         <TotalTime />
       </div>
       <table className="table table-striped" style={{width: "100%"}}>

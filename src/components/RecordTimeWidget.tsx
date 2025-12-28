@@ -71,7 +71,7 @@ const RecordTimeWidget = () => {
       <div className="title">
         <i className="fa fa-user"></i>
         <span className="ms-3">
-        {activeEntry ? "Currently Clocked In!" : "Not clocked in"}
+        {activeEntry ? "Currently Clocked In" : "Not clocked in"}
         </span>
       </div>
       <div className="content">

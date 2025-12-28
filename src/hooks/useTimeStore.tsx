@@ -14,6 +14,12 @@ export const useTimeStore = create<TimeStore>((set, get) => ({
     set({activeEntry: timeEntry});
   },
 
+  setFilterStart: async (value) => {
+    set({filterStart: value});
+  },
+  setFilterEnd: async (value) => {
+    set({filterEnd: value});
+  },
 
   createEntry: async (payload: any) => {
     try {

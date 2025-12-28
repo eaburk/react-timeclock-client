@@ -11,7 +11,7 @@ const TotalTime = () => {
    )
 
    return (
-     <div className="total-time p-2">
+     <div className="total-time p-2 bold">
        Total: {formatMinutes(totalMinutes + totalRecordedMinutes)}
      </div>
    )
