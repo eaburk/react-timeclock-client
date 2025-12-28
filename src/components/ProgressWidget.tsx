@@ -1,7 +1,6 @@
 import '../App.css';
 import { useTimeStore } from '../hooks';
 import { useNow } from '../hooks';
-import { isSameDay } from '../utilities';
 
 function ProgressWidget({ basedHours, label, entries }) {
   const overallHours = basedHours * 60;
@@ -9,8 +8,7 @@ function ProgressWidget({ basedHours, label, entries }) {
   const currentClockIn = activeEntry ? new Date(activeEntry?.startDate) : null;
   const now = useNow(1000);
 
-  const today = new Date();
-  const completedMinutesToday = 
+  const completedMinutesToday =
     entries.reduce( (total, { durationMinutes }) => total + durationMinutes, 0);
 
   const currentSessionMinutes = currentClockIn

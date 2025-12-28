@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import '../App.css';
-import { useTimeStore, useNow, useCompanyStore, useActiveSessionTime } from '../hooks';
+import { useTimeStore, useCompanyStore, useActiveSessionTime } from '../hooks';
 import type { TimeEntry } from '../types';
-import { EditTimeModal, TotalTime } from '../components';
+import { EditTimeModal, AddTimeModal, TotalTime } from '../components';
 import { formatMinutes } from '../utilities';
 import { startOfWeek, endOfWeek } from "date-fns";
 
 const EntryList = () => {
   const [showModal, setShowModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<TimeEntry | null>(null);
   const timeEntries = useTimeStore((state) => state.entries);
   const refreshTimeEntries = useTimeStore((state) => state.refreshEntries);
@@ -86,12 +87,19 @@ const EntryList = () => {
     return filterStart.toDateString() === start.toDateString() && filterEnd.toDateString() === end.toDateString();
   }
 
+  const handleAddEntry = () => {
+    setShowAddModal(true);
+  }
+
   return (
     <div className="time-entry-line-container">
       <div className="time-entry-title">Time Entries</div>
       <div className="entry-list-action-bar">
         <div className="mb-2">
-          <button type="button" onClick={handleBillAll} className="btn btn-secondary me-5">Toggle Billed</button>
+          <button title="Mark/Unmark billed status for the entries in the list" type="button" onClick={handleBillAll} className="btn btn-secondary me-1">Toggle Billed</button>
+          <button className="btn btn-primary me-5" onClick={handleAddEntry}>
+            <i className="fa fa-plus"></i> Add Entry
+          </button>
           Filters:
           <button className={`btn btn-outline-success m-1 p-1 ${isWeek() ? " active" : ""}`} onClick={selectFullWeek}>
             Week
@@ -147,6 +155,10 @@ const EntryList = () => {
         show={showModal}
         handleClose={() => setShowModal(false)}
         entryToEdit={selectedEntry}
+      />
+      <AddTimeModal
+        show={showAddModal}
+        handleClose={() => setShowAddModal(false)}
       />
     </div>
   );

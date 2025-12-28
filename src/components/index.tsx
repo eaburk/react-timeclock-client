@@ -4,6 +4,8 @@ export { default as CompanySelection } from './CompanySelection';
 
 export { default as EditTimeModal } from './EditTimeModal';
 
+export { default as AddTimeModal } from './AddTimeModal';
+
 export { default as EntryList } from './EntryList';
 
 export { default as MainContentPanel } from './MainContentPanel';
