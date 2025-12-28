@@ -25,7 +25,6 @@ const CalendarPanel = () => {
   }, [dateRange, activeCompany]);
 
   useEffect(() => {
-    console.log(filterStart, filterEnd)
     setDateRange({start: filterStart, end: filterEnd});
   }, [filterStart, filterEnd]);
 
