@@ -63,8 +63,8 @@ const EntryList = () => {
   const selectFullWeek = () => {
     if (!filterStart) return;
 
-    const start = startOfWeek(filterStart, { weekStartsOn: 0 });
-    const end = endOfWeek(filterEnd || filterStart, { weekStartsOn: 0 });
+    const start = startOfWeek(new Date(), { weekStartsOn: 0 });
+    const end = endOfWeek(new Date(), { weekStartsOn: 0 });
 
     refreshTimeEntries({ newStart: start, newEnd: end, company: activeCompany });
   };
@@ -95,21 +95,23 @@ const EntryList = () => {
     <div className="time-entry-line-container">
       <div className="time-entry-title">Time Entries</div>
       <div className="entry-list-action-bar">
-        <div className="mb-2">
-          <button title="Mark/Unmark billed status for the entries in the list" type="button" onClick={handleBillAll} className="btn btn-secondary me-1">Toggle Billed</button>
-          <button className="btn btn-primary me-5" onClick={handleAddEntry}>
-            <i className="fa fa-plus"></i> Add Entry
+        <button title="Mark/Unmark billed status for the entries in the list" type="button" onClick={handleBillAll} className="btn btn-secondary me-1">Toggle Billed</button>
+        <button className="btn btn-primary me-5" onClick={handleAddEntry}>
+          <i className="fa fa-plus"></i> Add Entry
+        </button>
+        <div className="filters-container">
+          <button className={`${isWeek() ? " active" : ""}`} onClick={selectFullWeek}>
+            Current&nbsp;Week
           </button>
-          Filters:
-          <button className={`btn btn-outline-success m-1 p-1 ${isWeek() ? " active" : ""}`} onClick={selectFullWeek}>
-            Week
-          </button>
-          <button className={`btn btn-outline-success m-1 p-1 ${isToday() ? " active" : ""}`} onClick={selectToday}>
+          <button className={`${isToday() ? " active" : ""}`} onClick={selectToday}>
             Today
           </button>
+          <button title="Use the calendar above to select a date range" className={`${!isToday() && !isWeek() ? " active" : ""}`}>
+            Custom
+          </button>
         </div>
-        <TotalTime />
       </div>
+      <TotalTime />
       <table className="table table-striped" style={{width: "100%"}}>
         <thead>
           <tr>
