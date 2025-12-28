@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import '../App.css';
-import { useTimeStore, useNow, useCompanyStore } from '../hooks';
+import { useTimeStore, useNow, useCompanyStore, useActiveSessionTime } from '../hooks';
 import type { TimeEntry } from '../types';
-import EditTimeModal from './EditTimeModal';
+import { EditTimeModal, TotalTime } from '../components';
+import { formatMinutes } from '../utilities';
 
 const EntryList = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [selectedEntry, setSelectedEntry] = useState<TimeEntry | null>(null);
   const timeEntries = useTimeStore((state) => state.entries);
   const refreshTimeEntries = useTimeStore((state) => state.refreshEntries);
   const deleteEntry = useTimeStore((state) => state.deleteEntry);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedEntry, setSelectedEntry] = useState<TimeEntry | null>(null);
   const setActiveEntry = useTimeStore((state) => state.setActiveEntry);
   const activeEntry = useTimeStore((state) => state.activeEntry);
   const activeCompany = useCompanyStore(state => state.activeCompany);
@@ -20,6 +21,8 @@ const EntryList = () => {
   let hour = 0;
   let minute = 0;
   const currentClockIn = activeEntry ? new Date(activeEntry?.startDate) : null;
+
+  const { hours, minutes, totalMinutes } = useActiveSessionTime(activeEntry?.start ?? null);
 
   if(activeEntry) {
     currentSessionMinutes = currentClockIn
@@ -34,18 +37,6 @@ const EntryList = () => {
       refreshTimeEntries({ company: activeCompany });
     }
   }, [activeCompany])
-
-  const getTotalTime = (timeEntry: TimeEntry) => {
-    if(timeEntry.end === '' || !timeEntry.end) return;
-
-    let difference = Math.abs(timeEntry.end.getTime() - timeEntry.start.getTime());
-    let totalMinutes = Math.floor(difference / (1000 * 60));
-
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60; // The modulo operator (%) gives the remainder
-
-    return `${hours}h ${minutes}m`;
-  }
 
   const handleEditEntry = (entry: TimeEntry) => {
     setSelectedEntry(entry);
@@ -83,8 +74,9 @@ const EntryList = () => {
   return (
     <div className="time-entry-line-container">
       <div className="time-entry-title">Time Entries</div>
-      <div className="float-start ms-3">
+      <div className="entry-list-action-bar">
         <button type="button" onClick={handleBillAll} className="btn btn-success">{allBilled ? "Unbill" : "Bill"}</button>
+        <TotalTime />
       </div>
       <table className="table table-striped" style={{width: "100%"}}>
         <thead>
@@ -116,12 +108,12 @@ const EntryList = () => {
               </td>
               <td>
                 {timeEntry.endDate !== '' && timeEntry.end.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})}
-                {timeEntry.endDate === '' && timeEntry.id !== activeEntry?.id && <button onClick={() => handleResumeEntry(timeEntry)} className='link-button'>Resume</button>}
-                {timeEntry.endDate === '' && timeEntry.id === activeEntry?.id && <div className='link-button'>In Progress</div>}
+                {timeEntry.endDate === '' && timeEntry.id !== activeEntry?.id && <button onClick={() => handleResumeEntry(timeEntry)} className='btn btn-link'>Resume</button>}
+                {timeEntry.endDate === '' && timeEntry.id === activeEntry?.id && <div className='btn btn-link'>In Progress</div>}
               </td>
               <td>
-                {timeEntry.endDate !== '' && getTotalTime(timeEntry)}
-                {timeEntry.endDate === '' && timeEntry.id === activeEntry?.id && <div className='link-button'>{hour}h {minute}m</div>}
+                {timeEntry.endDate !== '' && formatMinutes(timeEntry.durationMinutes)}
+                {timeEntry.endDate === '' && timeEntry.id === activeEntry?.id && <div className='btn btn-link'>{formatMinutes(totalMinutes)}</div>}
               </td>
             </tr>
           ))}

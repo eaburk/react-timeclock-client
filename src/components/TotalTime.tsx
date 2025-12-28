@@ -1,20 +1,20 @@
 import '../App.css';
-import { useTimeStore } from '../hooks';
+import { useTimeStore, useActiveSessionTime } from '../hooks';
+import { formatMinutes } from '../utilities';
 
 const TotalTime = () => {
-  const totalMinutes = useTimeStore((state) =>
+  const activeEntry = useTimeStore(state => state.activeEntry);
+  const { hours, minutes, totalMinutes } = useActiveSessionTime(activeEntry?.start ?? null);
+
+  const totalRecordedMinutes = useTimeStore((state) =>
      state.entries.reduce((sum, entry) => sum + entry.durationMinutes, 0)
    )
 
-   const hours = Math.floor(totalMinutes / 60)
-   const minutes = totalMinutes % 60
-
    return (
      <div className="total-time p-2">
-       Selection Total: {hours}h {minutes}m
+       Total: {formatMinutes(totalMinutes + totalRecordedMinutes)}
      </div>
    )
 }
 
 export default TotalTime;
-

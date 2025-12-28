@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
-import { TotalTime } from "../components";
 import "react-datepicker/dist/react-datepicker.css";
 import type { DateNull } from "../types";
 import '../App.css';
@@ -60,7 +59,6 @@ const CalendarPanel = () => {
           Today
         </button>
       </div>
-      <TotalTime />
     </div>
   );
 }

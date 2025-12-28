@@ -1,5 +1,5 @@
 import '../App.css';
-import { useTimeStore, useCompanyStore } from '../hooks';
+import { useTimeStore, useCompanyStore, useActiveSessionTime } from '../hooks';
 
 const RecordTimeWidget = () => {
 
@@ -31,12 +31,8 @@ const RecordTimeWidget = () => {
     setActiveEntry(newEntry);
   }
 
-  const now = new Date();
-  const currentSessionMinutes = activeEntry
-      ? Math.max(0, (now - activeEntry.start.getTime()) / 60000)
-      : 0;
-  const hour = Math.floor(currentSessionMinutes / 60);
-  const minute = Math.floor(currentSessionMinutes % 60);
+  const { hours, minutes, totalMinutes } =
+  useActiveSessionTime(activeEntry?.start ?? null);
 
   function formatLocalDateTime(date) {
     if(!date) return '';
@@ -101,7 +97,7 @@ const RecordTimeWidget = () => {
               You are clocked in since: <span className="bold">{activeEntry.start.toLocaleString('en-US', {hour: '2-digit', minute: '2-digit'})}</span>
             </div>
             <div>
-              Elasped time: <span className="bold">{hour}h {minute}m</span>
+              Elasped time: <span className="bold">{hours}h {minutes}m</span>
             </div>
             <div className="mt-3">
               <button type="button" disabled={activeEntry === null} className="btn btn-success" onClick={handleClockOut}>
