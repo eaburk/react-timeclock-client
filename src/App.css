@@ -203,7 +203,7 @@ button.normal:focus {
 }
 
 .filters-container button {
-  /* width: 49%; */
+  background: #fff;
   padding: 0.375rem;
   font-size: 1rem;
   line-height: 1.5
