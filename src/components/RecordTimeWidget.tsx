@@ -1,5 +1,7 @@
+import { useState, useEffect } from 'react';
 import '../App.css';
 import { useTimeStore, useCompanyStore, useActiveSessionTime } from '../hooks';
+import { isSameDay } from 'date-fns';
 
 const RecordTimeWidget = () => {
 
@@ -9,6 +11,23 @@ const RecordTimeWidget = () => {
   const activeCompany = useCompanyStore(state => state.activeCompany);
   const updateEntry = useTimeStore(state => state.updateEntry);
   const deleteEntry = useTimeStore(state => state.deleteEntry);
+  const weekEntries = useTimeStore(state => state.weekEntries);
+  const [resumableEntry, setResumableEntry] = useState(null);
+
+  useEffect(() => {
+    const today = new Date();
+    const entry = weekEntries
+      .find(entry =>
+        entry.endDate === "" &&
+        isSameDay(entry.start, today)
+      )
+    setResumableEntry(entry);
+  }, [weekEntries]);
+
+  const handleResumeEntry = () => {
+    setActiveEntry(resumableEntry);
+    setResumableEntry(null);
+  }
 
   const handleClockIn = async () => {
     const newNow = (new Date()).toLocaleString('en-CA', {
@@ -31,8 +50,7 @@ const RecordTimeWidget = () => {
     setActiveEntry(newEntry);
   }
 
-  const { hours, minutes, totalMinutes } =
-  useActiveSessionTime(activeEntry?.start ?? null);
+  const { hours, minutes } = useActiveSessionTime(activeEntry?.start ?? null);
 
   function formatLocalDateTime(date) {
     if(!date) return '';
@@ -66,6 +84,7 @@ const RecordTimeWidget = () => {
     setActiveEntry(null);
   }
 
+
   return (
     <div className="active-entry">
       <div className="title">
@@ -77,10 +96,19 @@ const RecordTimeWidget = () => {
       <div className="content">
         {!activeEntry &&
           <>
-            <p>
-              You are not currently clocked in.
-            </p>
-            <p>
+            {resumableEntry &&
+              <div style={{marginTop: "10px", padding: "15px", background: "#fff", border: "1px solid #76b467", borderRadius: "5px", textAlign: 'center'}}>
+                <div>
+                  You have an incomplete time entry for today.<br />
+                  Do you want to resume it?
+                </div>
+                <div>
+                  <button className="btn btn-danger" onClick={handleResumeEntry}>Resume</button>
+                </div>
+              </div>
+            }
+            <p style={{textAlign: 'center'}}>
+              You are not currently clocked in.<br />
               Start tracking your time with the button below.
             </p>
             <div>

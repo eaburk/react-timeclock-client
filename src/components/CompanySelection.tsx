@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import type { Company } from "../types";
 import '../App.css';
 import { EditCompaniesModal } from "../components";
 import { useCompanyStore } from '../hooks';

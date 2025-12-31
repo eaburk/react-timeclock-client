@@ -35,7 +35,7 @@ export const useTimeStore = create<TimeStore>((set, get) => ({
 
   updateEntry: async (payload: any) => {
     try {
-      const data = await updateTimeEntry(payload);
+      await updateTimeEntry(payload);
       const activeCompany = useCompanyStore.getState().activeCompany;
 
       await get().refreshEntries({ company: activeCompany });

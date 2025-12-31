@@ -100,13 +100,13 @@ const EntryList = () => {
           <i className="fa fa-plus"></i> Add Entry
         </button>
         <div className="filters-container">
-          <button className={`${isWeek() ? " active" : ""}`} onClick={selectFullWeek}>
+          <button className={`filter-button ${isWeek() ? " active" : ""}`} onClick={selectFullWeek}>
             Current&nbsp;Week
           </button>
-          <button className={`${isToday() ? " active" : ""}`} onClick={selectToday}>
+          <button className={`filter-button ${isToday() ? " active" : ""}`} onClick={selectToday}>
             Today
           </button>
-          <button title="Use the calendar above to select a date range" className={`${!isToday() && !isWeek() ? " active" : ""}`}>
+          <button title="Use the calendar above to select a date range" className={`filter-button ${!isToday() && !isWeek() ? " active" : ""}`}>
             Custom
           </button>
         </div>
