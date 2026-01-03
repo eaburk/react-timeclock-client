@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import '../App.css';
 import { useTimeStore, useCompanyStore, useActiveSessionTime } from '../hooks';
 import type { TimeEntry } from '../types';
@@ -91,6 +91,39 @@ const EntryList = () => {
     setShowAddModal(true);
   }
 
+  const containerRef = useRef(null);
+  const [showMore, setShowMore] = useState(false);
+
+  useEffect(() => {
+    setShowMore(timeEntries.length > 4);
+  }, [timeEntries])
+
+  const handleScroll = () => {
+    console.log(containerRef.current)
+    if (containerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+
+      // Use a 1px threshold to account for sub-pixel precision in modern browsers
+      const isAtBottom = Math.abs(scrollHeight - clientHeight - scrollTop) <= 1;
+
+      if (isAtBottom) {
+        setShowMore(false);
+      } else {
+        setShowMore(true);
+      }
+    }
+  };
+
+  const scrollDown = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollBy({
+        top: 300, // Scrolls down 300 pixels
+        left: 0,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
     <div className="time-entry-line-container">
       <div className="time-entry-title">Time Entries</div>
@@ -112,47 +145,57 @@ const EntryList = () => {
         </div>
       </div>
       <TotalTime />
-      <table className="table table-striped" style={{width: "100%"}}>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Billed</th>
-            <th>Date</th>
-            <th>Time In</th>
-            <th>Time Out</th>
-            <th>Total Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          {timeEntries.length === 0 && <tr><td colSpan={6}>No Entries</td></tr>}
-          {timeEntries.map(timeEntry => (
-            <tr key={timeEntry.id}>
-              <td>
-                <button title="Edit Entry" type="button" onClick={() => handleEditEntry(timeEntry)} className="normal mx-2">📝</button>
-                <button title="Delete Entry" type="button" onClick={() => handleDeleteEntry(timeEntry)} className="normal mx-2">❌</button>
-              </td>
-              <td>
-                <input type="checkbox" onChange={(event) => handleChangeBilled(event, timeEntry)} checked={timeEntry.billed === 1} />
-              </td>
-              <td>
-                {timeEntry.start.toLocaleDateString()}
-              </td>
-              <td>
-                {timeEntry.start.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})}
-              </td>
-              <td>
-                {timeEntry.endDate !== '' && timeEntry.end.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})}
-                {timeEntry.endDate === '' && timeEntry.id !== activeEntry?.id && <button onClick={() => handleResumeEntry(timeEntry)} className='btn btn-link'>Resume</button>}
-                {timeEntry.endDate === '' && timeEntry.id === activeEntry?.id && <div className='btn btn-link'>In Progress</div>}
-              </td>
-              <td>
-                {timeEntry.endDate !== '' && formatMinutes(timeEntry.durationMinutes)}
-                {timeEntry.endDate === '' && timeEntry.id === activeEntry?.id && <div className='btn btn-link'>{formatMinutes(totalMinutes)}</div>}
-              </td>
+      <div className="entries-table-container"  onScroll={handleScroll} ref={containerRef}>
+        <table className="entry-list-table table table-striped" style={{width: "100%"}}>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Billed</th>
+              <th>Date</th>
+              <th>Time In</th>
+              <th>Time Out</th>
+              <th>Total Time</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {timeEntries.length === 0 && <tr><td colSpan={6}>No Entries</td></tr>}
+            {timeEntries.map(timeEntry => (
+              <tr key={timeEntry.id}>
+                <td>
+                  <button title="Edit Entry" type="button" onClick={() => handleEditEntry(timeEntry)} className="normal mx-2">📝</button>
+                  <button title="Delete Entry" type="button" onClick={() => handleDeleteEntry(timeEntry)} className="normal mx-2">❌</button>
+                </td>
+                <td>
+                  <input type="checkbox" onChange={(event) => handleChangeBilled(event, timeEntry)} checked={timeEntry.billed === 1} />
+                </td>
+                <td>
+                  {timeEntry.start.toLocaleDateString()}
+                </td>
+                <td>
+                  {timeEntry.start.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})}
+                </td>
+                <td>
+                  {timeEntry.endDate !== '' && timeEntry.end.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})}
+                  {timeEntry.endDate === '' && timeEntry.id !== activeEntry?.id && <button onClick={() => handleResumeEntry(timeEntry)} className='btn btn-link'>Resume</button>}
+                  {timeEntry.endDate === '' && timeEntry.id === activeEntry?.id && <div className='btn btn-link'>In Progress</div>}
+                </td>
+                <td>
+                  {timeEntry.endDate !== '' && formatMinutes(timeEntry.durationMinutes)}
+                  {timeEntry.endDate === '' && timeEntry.id === activeEntry?.id && <div className='btn btn-link'>{formatMinutes(totalMinutes)}</div>}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {showMore &&
+        <div className="show-more-container mt-2">
+          <div className="show-more-inner-container" onClick={scrollDown}>
+            <i className="fa fa-chevron-down ms-2"></i>
+          </div>
+        </div>
+
+      }
       <EditTimeModal
         show={showModal}
         handleClose={() => setShowModal(false)}

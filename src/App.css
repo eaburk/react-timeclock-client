@@ -80,8 +80,7 @@ body {
 }
 
 .time-entry-line-container {
-  height: 300px;
-  overflow: auto;
+  height: 400px;
   padding: 10px;
   background: #fff;
   border-bottom-left-radius: 5px;
@@ -267,4 +266,30 @@ button.normal:focus {
 .btn-primary {
   background-color: #216ba5 !important;
   border: 1px solid #216ba5 !important;
+}
+
+.entries-table-container {
+  overflow-y: scroll;
+  height: 200px;
+}
+
+.show-more-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.show-more-inner-container {
+  display: flex;
+  justify-content: center;
+  border: 1px solid #efefef;
+  border-radius: 5px;
+  background: #dcdcdc;
+  padding: 0 8rem;
+  color: #fff;
+  width: 100%;
+}
+
+.show-more-inner-container:hover {
+  background: #c0c0c0;
 }
