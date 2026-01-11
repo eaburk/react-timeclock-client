@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { fetchTimeEntries, deleteTimeEntry, updateTimeEntry, saveTimeEntry } from '../services';
-import type { TimeStore, DateNull, TimeEntry, Company } from '../types';
+import type { TimeStore, TimeEntry, Company } from '../types';
 import { useCompanyStore } from '../hooks';
 
 export const useTimeStore = create<TimeStore>((set, get) => ({

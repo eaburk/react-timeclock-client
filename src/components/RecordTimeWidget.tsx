@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import '../App.css';
 import { useTimeStore, useCompanyStore, useActiveSessionTime } from '../hooks';
 import { isSameDay } from 'date-fns';
+import { motion } from "framer-motion";
 
 const RecordTimeWidget = () => {
 
@@ -80,7 +81,7 @@ const RecordTimeWidget = () => {
     formData.set('startDate', formatLocalDateTime(activeEntry.start));
     formData.set('endDate', formatLocalDateTime(clockOutDate));
 
-    updateEntry(Object.fromEntries(formData.entries()));
+    await updateEntry(Object.fromEntries(formData.entries()));
     setActiveEntry(null);
   }
 
@@ -95,7 +96,13 @@ const RecordTimeWidget = () => {
       </div>
       <div className="content">
         {!activeEntry &&
-          <>
+          <motion.div
+            key="clocked-in"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.75 }}
+          >
             {resumableEntry &&
               <div style={{marginTop: "10px", padding: "15px", background: "#fff", border: "1px solid #76b467", borderRadius: "5px", textAlign: 'center'}}>
                 <div>
@@ -111,29 +118,35 @@ const RecordTimeWidget = () => {
               You are not currently clocked in.<br />
               Start tracking your time with the button below.
             </p>
-            <div>
+            <div style={{textAlign: 'center'}}>
               <button type="button" className="btn btn-success" onClick={handleClockIn}>
                 Clock In
               </button>
             </div>
-          </>
+          </motion.div>
         }
         {activeEntry &&
-          <>
-            <div className="mb-3"><i className="fa fa-solid fa-clock" style={{fontSize: "64px"}}></i></div>
+          <motion.div
+            key="clock-in"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.75 }}
+          >
+            <div className="mb-3" style={{textAlign: 'center'}}><i className="fa fa-solid fa-clock" style={{fontSize: "64px"}}></i></div>
             <div>
               You are clocked in since: <span className="bold">{activeEntry.start.toLocaleString('en-US', {hour: '2-digit', minute: '2-digit'})}</span>
             </div>
             <div>
               Elasped time: <span className="bold">{hours}h {minutes}m</span>
             </div>
-            <div className="mt-3">
+            <div className="mt-3" style={{textAlign: 'center'}}>
               <button type="button" disabled={activeEntry === null} className="btn btn-success" onClick={handleClockOut}>
                 Clock Out
               </button>
               <button type="button" className="btn btn-outline-success ms-3" onClick={handleCancel}>Cancel</button>
             </div>
-          </>
+          </motion.div>
         }
       </div>
     </div>

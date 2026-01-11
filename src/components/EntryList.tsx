@@ -82,8 +82,8 @@ const EntryList = () => {
   }
 
   const isWeek = () => {
-    const start = startOfWeek(filterStart, { weekStartsOn: 0 });
-    const end = endOfWeek(filterEnd || filterStart, { weekStartsOn: 0 });
+    const start = startOfWeek(new Date(), { weekStartsOn: 0 });
+    const end = endOfWeek(new Date(), { weekStartsOn: 0 });
     return filterStart.toDateString() === start.toDateString() && filterEnd.toDateString() === end.toDateString();
   }
 
