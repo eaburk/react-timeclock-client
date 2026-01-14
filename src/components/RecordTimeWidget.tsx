@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
 import '../App.css';
 import { useTimeStore, useCompanyStore, useActiveSessionTime } from '../hooks';
-import { isSameDay } from 'date-fns';
 import { motion } from "framer-motion";
+import ResumeEntryPanel from './ResumeEntryPanel';
 
 const RecordTimeWidget = () => {
 
@@ -12,23 +11,6 @@ const RecordTimeWidget = () => {
   const activeCompany = useCompanyStore(state => state.activeCompany);
   const updateEntry = useTimeStore(state => state.updateEntry);
   const deleteEntry = useTimeStore(state => state.deleteEntry);
-  const weekEntries = useTimeStore(state => state.weekEntries);
-  const [resumableEntry, setResumableEntry] = useState(null);
-
-  useEffect(() => {
-    const today = new Date();
-    const entry = weekEntries
-      .find(entry =>
-        entry.endDate === "" &&
-        isSameDay(entry.start, today)
-      )
-    setResumableEntry(entry);
-  }, [weekEntries]);
-
-  const handleResumeEntry = () => {
-    setActiveEntry(resumableEntry);
-    setResumableEntry(null);
-  }
 
   const handleClockIn = async () => {
     const newNow = (new Date()).toLocaleString('en-CA', {
@@ -54,7 +36,7 @@ const RecordTimeWidget = () => {
   const { hours, minutes } = useActiveSessionTime(activeEntry?.start ?? null);
 
   function formatLocalDateTime(date) {
-    if(!date) return '';
+    if (!date) return '';
 
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
@@ -67,7 +49,7 @@ const RecordTimeWidget = () => {
   }
 
   const handleCancel = async () => {
-    if(confirm('Cancel and delete this entry?')) {
+    if (confirm('Cancel and delete this entry?')) {
       deleteEntry(activeEntry.id);
       setActiveEntry(null);
     }
@@ -91,7 +73,7 @@ const RecordTimeWidget = () => {
       <div className="title">
         <i className="fa fa-user"></i>
         <span className="ms-3">
-        {activeEntry ? "Currently Clocked In" : "Not clocked in"}
+          {activeEntry ? "Currently Clocked In" : "Not clocked in"}
         </span>
       </div>
       <div className="content">
@@ -103,22 +85,13 @@ const RecordTimeWidget = () => {
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.75 }}
           >
-            {resumableEntry &&
-              <div style={{marginTop: "10px", padding: "15px", background: "#fff", border: "1px solid #76b467", borderRadius: "5px", textAlign: 'center'}}>
-                <div>
-                  You have an incomplete time entry for today.<br />
-                  Do you want to resume it?
-                </div>
-                <div>
-                  <button className="btn btn-danger" onClick={handleResumeEntry}>Resume</button>
-                </div>
-              </div>
-            }
-            <p style={{textAlign: 'center'}}>
+            <ResumeEntryPanel />
+
+            <p style={{ textAlign: 'center' }}>
               You are not currently clocked in.<br />
               Start tracking your time with the button below.
             </p>
-            <div style={{textAlign: 'center'}}>
+            <div style={{ textAlign: 'center' }}>
               <button type="button" className="btn btn-success" onClick={handleClockIn}>
                 Clock In
               </button>
@@ -133,14 +106,14 @@ const RecordTimeWidget = () => {
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.75 }}
           >
-            <div className="mb-3" style={{textAlign: 'center'}}><i className="fa fa-solid fa-clock" style={{fontSize: "64px"}}></i></div>
+            <div className="mb-3" style={{ textAlign: 'center' }}><i className="fa fa-solid fa-clock" style={{ fontSize: "64px" }}></i></div>
             <div>
-              You are clocked in since: <span className="bold">{activeEntry.start.toLocaleString('en-US', {hour: '2-digit', minute: '2-digit'})}</span>
+              You are clocked in since: <span className="bold">{activeEntry.start.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
             </div>
             <div>
               Elasped time: <span className="bold">{hours}h {minutes}m</span>
             </div>
-            <div className="mt-3" style={{textAlign: 'center'}}>
+            <div className="mt-3" style={{ textAlign: 'center' }}>
               <button type="button" disabled={activeEntry === null} className="btn btn-success" onClick={handleClockOut}>
                 Clock Out
               </button>
