@@ -46,7 +46,7 @@ const ClockedInPanel = () => {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 10 }}
-      transition={{ duration: 0.75 }}
+      transition={{ duration: 0.50 }}
     >
       <div className="mb-3" style={{ textAlign: 'center' }}><i className="fa fa-solid fa-clock" style={{ fontSize: "64px" }}></i></div>
       <div>
