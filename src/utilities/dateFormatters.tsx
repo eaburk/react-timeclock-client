@@ -8,3 +8,7 @@ export function toYYMMDDLocal(date: Date) {
 
   return dateLocal.toISOString();
 }
+
+export function toHHMM(date: Date) {
+  return date.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true});
+}

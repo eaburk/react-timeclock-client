@@ -3,7 +3,7 @@ import '../App.css';
 import { useTimeStore, useCompanyStore, useActiveSessionTime } from '../hooks';
 import type { TimeEntry } from '../types';
 import { EditTimeModal, AddTimeModal, TotalTime } from '../components';
-import { formatMinutes } from '../utilities';
+import { formatMinutes, toHHMM } from '../utilities';
 import { startOfWeek, endOfWeek } from "date-fns";
 import DatePicker from "react-datepicker";
 
@@ -49,12 +49,9 @@ const EntryList = () => {
   };
 
   const handleDeleteEntry = async (timeEntry: TimeEntry) => {
-    if(timeEntry.endDate === "" && activeEntry?.id === timeEntry.id) {
-      confirm("You can't delete an in progress entry");
-      return;
-    }
     if(confirm('Are you sure?')) {
       await deleteEntry(timeEntry.id);
+      setActiveEntry(null);
     }
   }
 
@@ -114,7 +111,6 @@ const EntryList = () => {
   }, [timeEntries])
 
   const handleScroll = () => {
-    console.log(containerRef.current)
     if (containerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
 
@@ -211,10 +207,10 @@ const EntryList = () => {
                   {timeEntry.start.toLocaleDateString()}
                 </td>
                 <td>
-                  {timeEntry.start.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})}
+                  {toHHMM(timeEntry.start)}
                 </td>
                 <td>
-                  {timeEntry.endDate !== '' && timeEntry.end.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})}
+                  {timeEntry.endDate !== '' && toHHMM(timeEntry.end)}
                   {timeEntry.endDate === '' && timeEntry.id !== activeEntry?.id && <button onClick={() => handleResumeEntry(timeEntry)} className='btn btn-link'>Resume</button>}
                   {timeEntry.endDate === '' && timeEntry.id === activeEntry?.id && <div className='btn btn-link'>In Progress</div>}
                 </td>

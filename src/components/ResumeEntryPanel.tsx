@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTimeStore } from "../hooks";
 import { isSameDay } from 'date-fns';
+import { toHHMM } from "../utilities";
 
 
 const ResumeEntryPanel = () => {
@@ -29,9 +30,14 @@ const ResumeEntryPanel = () => {
   if (!resumableEntry) return null;
 
   return (
-    <div className="mt-2">
-      <button className="btn btn-link" onClick={handleResumeEntry}>Click here to resume your incomplete time entry</button>
-    </div>
+    <>
+      <div className="mt-2">
+        <button className="btn btn-link" onClick={handleResumeEntry}>Click to resume your incomplete time entry</button>
+      </div>
+      <div>
+        Today at {toHHMM(resumableEntry?.start)}
+      </div>
+    </>
   );
 }
 
