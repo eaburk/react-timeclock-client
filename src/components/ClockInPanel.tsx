@@ -1,5 +1,4 @@
 import { useCompanyStore, useTimeStore } from '../hooks';
-import ResumeEntryPanel from './ResumeEntryPanel';
 import { motion } from "framer-motion";
 
 const ClockInPanel = () => {
@@ -36,7 +35,6 @@ const ClockInPanel = () => {
       exit={{ opacity: 0, y: 10 }}
       transition={{ duration: 0.50 }}
     >
-      <ResumeEntryPanel />
       <p style={{ textAlign: 'center' }}>
         You are not currently clocked in.<br />
         Start tracking your time with the button below.

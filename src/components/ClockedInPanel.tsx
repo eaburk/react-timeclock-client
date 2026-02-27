@@ -48,13 +48,14 @@ const ClockedInPanel = () => {
       exit={{ opacity: 0, y: 10 }}
       transition={{ duration: 0.50 }}
     >
-      <div className="mb-3" style={{ textAlign: 'center' }}><i className="fa fa-solid fa-clock" style={{ fontSize: "64px" }}></i></div>
-      <div>
-        You are clocked in since: <span className="bold">{activeEntry.start.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
+      <div className="mb-3" style={{ display: "flex", alignItems: "center" }}>
+        <i className="fa fa-solid fa-clock" style={{ fontSize: "36px", marginRight: "10px" }}></i>
+        <div>
+          <div>You are clocked in since: <span className="bold">{activeEntry.start.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit' })}</span></div>
+          <div>Elasped time: <span className="bold">{hours}h {minutes}m</span></div>
+        </div>
       </div>
-      <div>
-        Elasped time: <span className="bold">{hours}h {minutes}m</span>
-      </div>
+
       <div className="mt-3" style={{ textAlign: 'center' }}>
         <button type="button" disabled={activeEntry === null} className="btn btn-success" onClick={handleClockOut}>
           Clock Out

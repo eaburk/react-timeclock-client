@@ -1,10 +1,22 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, forwardRef } from "react";
 import '../App.css';
 import { useTimeStore, useCompanyStore, useActiveSessionTime } from '../hooks';
 import type { TimeEntry } from '../types';
 import { EditTimeModal, AddTimeModal, TotalTime } from '../components';
 import { formatMinutes } from '../utilities';
 import { startOfWeek, endOfWeek } from "date-fns";
+import DatePicker from "react-datepicker";
+
+const HiddenInput = forwardRef<HTMLInputElement, any>(
+  ({ onClick }, ref) => (
+    <input
+      ref={ref}
+      onClick={onClick}
+      style={{ display: "none" }}
+      readOnly
+    />
+  )
+);
 
 const EntryList = () => {
   const [showModal, setShowModal] = useState(false);
@@ -17,8 +29,11 @@ const EntryList = () => {
   const activeEntry = useTimeStore((state) => state.activeEntry);
   const activeCompany = useCompanyStore(state => state.activeCompany);
   const updateEntry = useTimeStore(state => state.updateEntry);
-  const filterStart = useTimeStore(state => state.filterStart)
-  const filterEnd = useTimeStore(state => state.filterEnd)
+  const filterStart = useTimeStore(state => state.filterStart);
+  const filterEnd = useTimeStore(state => state.filterEnd);
+  const [range, setRange] = useState<[Date | null, Date | null]>([null, null]);
+  const [startDate, endDate] = range;
+  const [open, setOpen] = useState(false);
 
   const { totalMinutes } = useActiveSessionTime(activeEntry?.start ?? null);
 
@@ -124,6 +139,10 @@ const EntryList = () => {
     }
   };
 
+  const customDateTitle = startDate && endDate
+              ? `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`
+              : ""
+
   return (
     <div className="time-entry-line-container">
       <div className="time-entry-title">Time Entries</div>
@@ -139,9 +158,29 @@ const EntryList = () => {
           <button className={`filter-button ${isToday() ? " active" : ""}`} onClick={selectToday}>
             Today
           </button>
-          <button title="Use the calendar above to select a date range" className={`filter-button ${!isToday() && !isWeek() ? " active" : ""}`}>
-            Custom
+
+          <button onClick={() => setOpen(true)} className={`filter-button ${!isToday() && !isWeek() ? " active" : ""}`}>
+            <span title={customDateTitle}>
+              Custom
+            </span>
           </button>
+          <DatePicker
+            selectsRange
+            startDate={startDate}
+            endDate={endDate}
+            onChange={async (update) => {
+              if(update[1]){
+                refreshTimeEntries({ newStart: update[0], newEnd: update[1], company: activeCompany });
+              }
+              setRange(update);
+              if (update[0] && update[1]) {
+                setOpen(false);
+              }
+            }}
+            open={open}
+            onClickOutside={() => setOpen(false)}
+            customInput={<HiddenInput />}
+          />
         </div>
       </div>
       <TotalTime />

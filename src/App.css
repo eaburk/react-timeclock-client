@@ -74,11 +74,6 @@ body {
   min-width: 800px;
 }
 
-.top-content-container {
-  display: flex;
-  justify-content: space-around;
-}
-
 .time-entry-line-container {
   height: 400px;
   padding: 10px;
@@ -151,8 +146,7 @@ button.normal:focus {
   margin-bottom: 10px;
   box-shadow: 5px 5px 5px #dcdcdc;
   border: 1px solid #76b467;
-  border-top-left-radius: 6px;
-  height: 300px;
+  border-radius: 6px;
 }
 
 .active-entry>.title {
@@ -172,6 +166,7 @@ button.normal:focus {
   align-items: center;
   justify-content: center;
   height: 80%;
+  padding: 20px;
 }
 
 .active-entry>.footer {
@@ -200,6 +195,8 @@ button.normal:focus {
 }
 
 .progress-bars-container {
+  display: flex;
+  justify-content: space-evenly;
   margin-bottom: 10px;
   border-radius: 5px;
   padding: 10px;
@@ -217,10 +214,6 @@ button.normal:focus {
 .btn-link {
   text-decoration: none !important;
   padding: 0 !important;
-}
-
-.filters-container {
-  width: 20rem;
 }
 
 .filters-container button {

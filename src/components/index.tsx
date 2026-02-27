@@ -1,5 +1,3 @@
-export { default as CalendarPanel } from './CalendarPanel';
-
 export { default as EditTimeModal } from './EditTimeModal';
 
 export { default as AddTimeModal } from './AddTimeModal';

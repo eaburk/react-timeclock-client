@@ -1,8 +1,9 @@
 import '../App.css';
-import { RecordTimeWidget, CalendarPanel, ProgressWidget } from './';
+import { RecordTimeWidget, ProgressWidget } from './';
 import EntryList from './EntryList';
 import { useTimeStore } from '../hooks';
 import { isSameDay } from '../utilities';
+import ResumeEntryPanel from './ResumeEntryPanel';
 
 const MainContentPanel = () => {
   const weekEntries = useTimeStore(state => state.weekEntries);
@@ -18,13 +19,13 @@ const MainContentPanel = () => {
   return (
       <div className="main-content-container">
         <div className="progress-bars-container">
-          <ProgressWidget label={"Today's"} basedHours={8} entries={todayEntries} />
-          <ProgressWidget label={"Week's"} basedHours={40} entries={weekEntries} />
-        </div>
-        <div className="top-content-container">
-          <RecordTimeWidget />
           <div>
-            <CalendarPanel />
+            <RecordTimeWidget />
+          </div>
+          <div>
+            <ProgressWidget label={"Today's"} basedHours={8} entries={todayEntries} />
+            <ProgressWidget label={"Week's"} basedHours={40} entries={weekEntries} />
+            <ResumeEntryPanel />
           </div>
         </div>
         <EntryList />

@@ -2,7 +2,7 @@ import '../App.css';
 import { useTimeStore } from '../hooks';
 import { useNow } from '../hooks';
 
-function ProgressWidget({ basedHours, label, entries }) {
+const ProgressWidget = ({ basedHours, label, entries }) => {
   const overallHours = basedHours * 60;
   const activeEntry = useTimeStore((state) => state.activeEntry);
   const currentClockIn = activeEntry ? new Date(activeEntry?.startDate) : null;
