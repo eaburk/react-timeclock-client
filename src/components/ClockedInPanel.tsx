@@ -23,7 +23,7 @@ const ClockedInPanel = () => {
 
   const handleCancel = async () => {
     if (confirm('Cancel and delete this entry?')) {
-      deleteEntry(activeEntry.id);
+      await deleteEntry(activeEntry.id);
       setActiveEntry(null);
     }
   }

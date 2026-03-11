@@ -31,11 +31,8 @@ const ResumeEntryPanel = () => {
 
   return (
     <>
-      <div className="mt-2">
-        <button className="btn btn-link" onClick={handleResumeEntry}>Click to resume your incomplete time entry</button>
-      </div>
-      <div>
-        Today at {toHHMM(resumableEntry?.start)}
+      <div className="mt-2 text-center">
+        <button className="btn btn-link" onClick={handleResumeEntry}>Resume your {toHHMM(resumableEntry?.start)} entry?</button>
       </div>
     </>
   );

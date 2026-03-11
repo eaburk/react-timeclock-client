@@ -6,6 +6,7 @@ import { EditTimeModal, AddTimeModal, TotalTime } from '../components';
 import { formatMinutes, toHHMM } from '../utilities';
 import { startOfWeek, endOfWeek } from "date-fns";
 import DatePicker from "react-datepicker";
+import ProgressBarsWidget from "./ProgressBarsWidget";
 
 const HiddenInput = forwardRef<HTMLInputElement, any>(
   ({ onClick }, ref) => (
@@ -34,11 +35,10 @@ const EntryList = () => {
   const [range, setRange] = useState<[Date | null, Date | null]>([null, null]);
   const [startDate, endDate] = range;
   const [open, setOpen] = useState(false);
-
   const { totalMinutes } = useActiveSessionTime(activeEntry?.start ?? null);
 
   useEffect(() => {
-    if(activeCompany) {
+    if (activeCompany) {
       refreshTimeEntries({ company: activeCompany });
     }
   }, [activeCompany])
@@ -49,7 +49,7 @@ const EntryList = () => {
   };
 
   const handleDeleteEntry = async (timeEntry: TimeEntry) => {
-    if(confirm('Are you sure?')) {
+    if (confirm('Are you sure?')) {
       await deleteEntry(timeEntry.id);
       setActiveEntry(null);
     }
@@ -136,12 +136,16 @@ const EntryList = () => {
   };
 
   const customDateTitle = startDate && endDate
-              ? `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`
-              : ""
+    ? `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`
+    : "";
 
   return (
     <div className="time-entry-line-container">
-      <div className="time-entry-title">Time Entries</div>
+      <div style={{ display: "flex", borderBottom: "1px solid #ccc", marginBottom: "15px" }}>
+        <div className="time-entry-title">Time Entries</div>
+        <ProgressBarsWidget />
+      </div>
+
       <div className="entry-list-action-bar">
         <button title="Mark/Unmark billed status for the entries in the list" type="button" onClick={handleBillAll} className="btn btn-secondary me-1">Toggle Billed</button>
         <button className="btn btn-primary me-5" onClick={handleAddEntry}>
@@ -165,7 +169,7 @@ const EntryList = () => {
             startDate={startDate}
             endDate={endDate}
             onChange={async (update) => {
-              if(update[1]){
+              if (update[1]) {
                 refreshTimeEntries({ newStart: update[0], newEnd: update[1], company: activeCompany });
               }
               setRange(update);
@@ -180,8 +184,8 @@ const EntryList = () => {
         </div>
       </div>
       <TotalTime />
-      <div className="entries-table-container"  onScroll={handleScroll} ref={containerRef}>
-        <table className="entry-list-table table table-striped" style={{width: "100%"}}>
+      <div className="entries-table-container" onScroll={handleScroll} ref={containerRef}>
+        <table className="entry-list-table table table-striped" style={{ width: "100%" }}>
           <thead>
             <tr>
               <th></th>

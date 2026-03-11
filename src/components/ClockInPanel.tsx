@@ -1,5 +1,6 @@
 import { useCompanyStore, useTimeStore } from '../hooks';
 import { motion } from "framer-motion";
+import ResumeEntryPanel from './ResumeEntryPanel';
 
 const ClockInPanel = () => {
   const setActiveEntry = useTimeStore((state) => state.setActiveEntry);
@@ -24,7 +25,7 @@ const ClockInPanel = () => {
 
     const newEntry = await createEntry(Object.fromEntries(formData.entries()));
 
-    setActiveEntry(newEntry);
+    await setActiveEntry(newEntry);
   }
 
   return (
@@ -44,6 +45,7 @@ const ClockInPanel = () => {
           Clock In
         </button>
       </div>
+      <ResumeEntryPanel />
     </motion.div>
   )
 }
