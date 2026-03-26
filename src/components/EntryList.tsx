@@ -64,8 +64,8 @@ const EntryList = () => {
     await updateEntry(payload);
   }
 
-  const allBilled = timeEntries.every(e => (e.billed == "1"));
   const handleBillAll = () => {
+    const allBilled = timeEntries.every(e => (e.billed == "1"));
     timeEntries.forEach(timeEntry => {
       const payload = { id: timeEntry.id, startDate: timeEntry.startDate, endDate: timeEntry.endDate, billed: allBilled ? "0" : "1" }
       updateEntry(payload);
