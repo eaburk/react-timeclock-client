@@ -10,10 +10,10 @@ function App() {
   return (
     <>
       <NavBar />
-        <div className="spa-container">
-          <div className="main-content-panel">
-            <MainContentPanel />
-          </div>
+      <div className="spa-container">
+        <div className="main-content-panel">
+          <MainContentPanel />
+        </div>
       </div>
     </>
   )
