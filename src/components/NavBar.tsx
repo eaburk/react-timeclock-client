@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import '../App.css';
 import { useCompanyStore } from '../hooks';
 import { EditCompaniesModal } from "./";
+import ReportAveragesModal from "./ReportAveragesModal";
 
 const NavBar = () => {
   const [showModal, setShowModal] = useState(false);
@@ -9,6 +10,7 @@ const NavBar = () => {
   const refreshCompanies = useCompanyStore(state => state.refreshCompanies);
   const setActiveCompany = useCompanyStore(state => state.setActiveCompany);
   const activeCompany = useCompanyStore(state => state.activeCompany);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   useEffect(() => {
     refreshCompanies();
@@ -16,7 +18,7 @@ const NavBar = () => {
 
   useEffect(() => {
     //when app loads, default to first company in list
-    if(activeCompany === null && companies.length > 0){
+    if (activeCompany === null && companies.length > 0) {
       setActiveCompany(companies[0]);
     }
   }, [companies]);
@@ -27,6 +29,15 @@ const NavBar = () => {
 
   const handleEditCompanies = () => {
     setShowModal(true);
+  }
+
+  const handleReportsClick = (event) => {
+    event.preventDefault();
+    setShowReportModal(true);
+  }
+
+  const handleReportModalClose = () => {
+    setShowReportModal(false);
   }
 
   return (
@@ -43,7 +54,7 @@ const NavBar = () => {
                 Company ({activeCompany?.description})
               </a>
               <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                {companies.map((company, index) => (
+                {companies.map((company) => (
                   <div key={company.id}> {/* Use a Fragment or wrapper */}
                     <li className="dropdown-item" value={company.id} onClick={() => handleCompanyChange(company)}>
                       {company.description} {company.id === activeCompany?.id && <i className="fa fa-check"></i>}
@@ -54,12 +65,19 @@ const NavBar = () => {
                 <li key={"edit-companies"} className="dropdown-item" onClick={handleEditCompanies}>Edit Companies</li>
               </ul>
             </li>
+            <li className="nav-item">
+              <a className="nav-link" href="#" onClick={handleReportsClick}>Reports</a>
+            </li>
           </ul>
         </div>
       </div>
       <EditCompaniesModal
         show={showModal}
         handleClose={() => setShowModal(false)}
+      />
+      <ReportAveragesModal
+        show={showReportModal}
+        handleClose={handleReportModalClose}
       />
     </nav>
   )

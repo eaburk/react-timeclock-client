@@ -60,10 +60,6 @@ body {
   }
 }
 
-.card {
-  padding: 2em;
-}
-
 .read-the-docs {
   color: #888;
 }
@@ -71,6 +67,7 @@ body {
 .spa-container {
   display: flex;
   gap: 12px;
+  justify-content: center;
 }
 
 .main-content-container {
@@ -261,4 +258,23 @@ button.normal:focus {
 
 .show-more-inner-container:hover {
   background: #c0c0c0;
+}
+
+@media screen and (width <= 480px) {
+  .main-content-container {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .active-entry {
+    width: 85%;
+    margin: 0 auto;
+    margin-bottom: 10px;
+  }
+
+  .time-entry-line-container {
+    width: 85%;
+    margin: 0 auto;
+  }
+
 }

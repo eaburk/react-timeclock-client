@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Modal, Button } from 'react-bootstrap';
 import { useCompanyStore } from '../hooks';
-import type { TimeEntry } from '../types';
-import { updateTimeEntry } from '../services';
 
 type EditCompaniesModalProps = {
   show: boolean;
@@ -25,7 +23,7 @@ const EditCompaniesModal: React.FC<EditCompaniesModalProps> = ({ show, handleClo
   }
 
   const handleDeleteEntry = (company) => {
-    if(confirm('Really delete this company?')){
+    if (confirm('Really delete this company?')) {
       deleteCompany(company.id);
     }
   }
@@ -36,7 +34,7 @@ const EditCompaniesModal: React.FC<EditCompaniesModalProps> = ({ show, handleClo
       </Modal.Header>
       <Modal.Body>
         <div>
-          Add New: 
+          Add New:
           <input className="ms-3" type="text" onChange={event => handleNewCompanyNameChange(event)} value={newCompanyName} />
           <button className="btn btn-primary ms-3" onClick={handleSaveCompany}>Save</button>
         </div>
