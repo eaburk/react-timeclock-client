@@ -65,8 +65,13 @@ const NavBar = () => {
                 <li key={"edit-companies"} className="dropdown-item" onClick={handleEditCompanies}>Edit Companies</li>
               </ul>
             </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#" onClick={handleReportsClick}>Reports</a>
+            <li className="nav-item dropdown">
+              <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Reports
+              </a>
+              <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li className="dropdown-item" onClick={handleReportsClick}>Time Report Breakdown</li>
+              </ul>
             </li>
           </ul>
         </div>

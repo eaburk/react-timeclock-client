@@ -260,6 +260,12 @@ button.normal:focus {
   background: #c0c0c0;
 }
 
+.dropdown-item:hover {
+  cursor: pointer;
+  background-color: rgb(149, 149, 149) !important;
+  color: rgb(255,255,255) !important;
+}
+
 @media screen and (width <= 480px) {
   .main-content-container {
     min-width: unset;
@@ -276,5 +282,4 @@ button.normal:focus {
     width: 85%;
     margin: 0 auto;
   }
-
 }
