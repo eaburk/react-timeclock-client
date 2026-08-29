@@ -295,7 +295,7 @@ const ReportAveragesModal: React.FC<ReportAveragesModalProps> = ({
               onClick={() => handleShiftMonth('prev')}
               disabled={isAllTimeActive}
             >
-              ◀ Prev Month
+              &#x25C0;&#xFE0E; Prev Month
             </Button>
 
             <div className="text-center flex-grow-1">
@@ -310,7 +310,7 @@ const ReportAveragesModal: React.FC<ReportAveragesModalProps> = ({
               onClick={() => handleShiftMonth('next')}
               disabled={isAllTimeActive}
             >
-              Next Month ▶
+              Next Month &#x25B6;&#xFE0E;
             </Button>
           </div>
 
@@ -566,12 +566,7 @@ const ReportAveragesModal: React.FC<ReportAveragesModalProps> = ({
                               cursor: 'pointer'
                             }}
                           >
-                            <td className="text-center">
-                              {isExpanded
-                                ? '▼'
-                                : '▶'}
-                            </td>
-
+                            <td className="text-center"> {isExpanded ? '▼\uFE0E' : '▶\uFE0E'} </td>
                             <td className="fw-semibold">
                               {weekStart.toLocaleDateString(
                                 undefined,
