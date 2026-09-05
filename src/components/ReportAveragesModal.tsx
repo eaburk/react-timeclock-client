@@ -1,19 +1,11 @@
 // This component is completely AI generated. Read and Modify at your own peril. It may make your brain hurt. You have been warned!
 // However, it works and it took me one hour to do instead of several days to build it myself and properly organize the code.
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  Modal,
-  Button,
-  Spinner,
-  Table,
-  Form,
-  Row,
-  Col,
-  ButtonGroup
-} from 'react-bootstrap';
+import { Modal, Button, Spinner, Table, Form, Row, Col, ButtonGroup } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import { useTimeReportStore } from '../hooks/useTimeReportStore';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useCompanyStore } from '../hooks';
 
 type ReportAveragesModalProps = {
   show: boolean;
@@ -32,19 +24,9 @@ type WeeklySummary = {
   days: DailySummary[];
 };
 
-const ReportAveragesModal: React.FC<ReportAveragesModalProps> = ({
-  show,
-  handleClose
-}) => {
-  const {
-    reportEntries,
-    reportStart,
-    reportEnd,
-    isReportLoading,
-    refreshReportEntries,
-    setReportDates
-  } = useTimeReportStore();
-
+const ReportAveragesModal: React.FC<ReportAveragesModalProps> = ({ show, handleClose }) => {
+  const { reportEntries, reportStart, reportEnd, isReportLoading, refreshReportEntries, setReportDates } = useTimeReportStore();
+  const activeCompany = useCompanyStore(state => state.activeCompany);
   const [expandedWeeks, setExpandedWeeks] = useState<Set<string>>(new Set());
 
   // Fetch data whenever dates change or when the modal opens
@@ -280,7 +262,7 @@ const ReportAveragesModal: React.FC<ReportAveragesModalProps> = ({
   return (
     <Modal show={show} onHide={handleClose} size="lg">
       <Modal.Header closeButton>
-        <Modal.Title>Time Report Breakdown</Modal.Title>
+        <Modal.Title>{activeCompany?.description} Time Report Breakdown</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
