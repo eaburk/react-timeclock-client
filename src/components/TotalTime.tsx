@@ -4,7 +4,12 @@ import { formatMinutes } from '../utilities';
 
 const TotalTime = () => {
   const activeEntry = useTimeStore(state => state.activeEntry);
-  const { hours, minutes, totalMinutes } = useActiveSessionTime(activeEntry?.start ?? null);
+  const { totalMinutes } = useActiveSessionTime(activeEntry?.start ?? null);
+  const filterStart = useTimeStore((state) => state.filterStart);
+  const filterEnd = useTimeStore((state) => state.filterEnd);
+
+  const formattedStart = new Intl.DateTimeFormat('en-US').format(filterStart);
+  const formattedEnd = new Intl.DateTimeFormat('en-US').format(filterEnd);
 
   const totalRecordedMinutes = useTimeStore((state) =>
      state.entries.reduce((sum, entry) => sum + entry.durationMinutes, 0)
@@ -12,7 +17,7 @@ const TotalTime = () => {
 
    return (
      <div className="total-time p-2" style={{fontStyle: "italic"}}>
-       Total time for selected range: <span className="bold">{formatMinutes(totalMinutes + totalRecordedMinutes)}</span>
+       Total time for {formattedStart} {formattedStart !== formattedEnd && " - " + formattedEnd}: <span className="bold">{formatMinutes(totalMinutes + totalRecordedMinutes)}</span>
      </div>
    )
 }
