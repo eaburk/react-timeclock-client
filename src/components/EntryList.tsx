@@ -141,7 +141,7 @@ const EntryList = () => {
 
   return (
     <div className="time-entry-line-container">
-      <div style={{ display: "flex", borderBottom: "1px solid #ccc", marginBottom: "15px" }}>
+      <div className="time-entries-progress-container">
         <div className="time-entry-title">Time Entries</div>
         <ProgressBarsWidget />
       </div>
